@@ -3,9 +3,7 @@ import { Prisma, user } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class UsersRepository {
-  constructor(private readonly prisma: PrismaService) {}
-
+export class UsersRepository extends PrismaService {
   /**
    * 유저 전체를 조회하는 select문
    * @param skip
@@ -28,7 +26,7 @@ export class UsersRepository {
     where?: Prisma.userWhereInput;
     orderBy?: Prisma.userOrderByWithRelationInput;
   }) {
-    return this.prisma.user.findMany({
+    return this.user.findMany({
       skip,
       take,
       cursor,
@@ -42,7 +40,7 @@ export class UsersRepository {
    * @param userId
    */
   async selectOneUser(userId: Prisma.userWhereUniqueInput) {
-    return this.prisma.user.findUnique({
+    return this.user.findUnique({
       where: userId,
     });
   }
@@ -52,7 +50,7 @@ export class UsersRepository {
    * @param data { name, email }
    */
   async createUser(data: Prisma.userCreateInput): Promise<user> {
-    return this.prisma.user.create({
+    return this.user.create({
       data,
     });
   }
@@ -66,7 +64,7 @@ export class UsersRepository {
     data: Prisma.userUpdateInput;
   }): Promise<user> {
     const { where, data } = params;
-    return this.prisma.user.update({
+    return this.user.update({
       data,
       where,
     });
@@ -77,7 +75,7 @@ export class UsersRepository {
    * @param where
    */
   async deleteUser(where: Prisma.userWhereUniqueInput): Promise<user> {
-    return this.prisma.user.delete({
+    return this.user.delete({
       where,
     });
   }
