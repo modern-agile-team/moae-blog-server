@@ -14,10 +14,10 @@ model user {
     id BigInt  @default(autoincrement()) @id @db.UnsignedBigInt
     name String @db.VarChar(50)
     email String @db.VarChar(50)
-    base_url String @default("https://www.google.com")
-    auth_code  Int @default(0)
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt
+    baseUrl String @default("https://www.google.com") @Map("base_url")
+    authCode  Int @default(0) @Map("auth_code")
+    createdAt DateTime @default(now()) @Map("created_at")
+    updatedAt DateTime @updatedAt @Map("updated_at")
     likes like_rel[]
     boards board[]
     comments comment[]
@@ -29,10 +29,10 @@ model board {
     id BigInt  @default(autoincrement()) @id @db.UnsignedBigInt
     title String @db.VarChar(50)
     user user @relation(fields: [user_id], references: [id])
-    user_id BigInt @db.UnsignedBigInt
+    userId BigInt @db.UnsignedBigInt @Map("user_id")
     context String @db.VarChar(512)
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt
+    createdAt DateTime @default(now()) @Map("created_at")
+    updatedAt DateTime @updatedAt @Map("updated_at")
     likes like_rel[]
     comments comment[]
     images image[]
@@ -41,28 +41,28 @@ model board {
 model comment {
     id Int  @default(autoincrement()) @id
     user user @relation(fields: [user_id], references: [id])
-    user_id BigInt @db.UnsignedBigInt
+    userId BigInt @db.UnsignedBigInt @Map("user_id")
     board board @relation(fields: [board_id], references: [id])
-    board_id BigInt @db.UnsignedBigInt
+    boardId BigInt @db.UnsignedBigInt @Map("board_id")
     context String @db.VarChar(512)
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt
+    createdAt DateTime @default(now()) @Map("created_at")
+    updatedAt DateTime @updatedAt @Map("updated_at")
 }
 
 model like_rel {
     id Int  @default(autoincrement()) @id
     user user @relation(fields: [user_id], references: [id])
-    user_id BigInt @db.UnsignedBigInt
+    userId BigInt @db.UnsignedBigInt @Map("user_id")
     board board @relation(fields: [board_id], references: [id])
-    board_id BigInt @db.UnsignedBigInt
+    boardId BigInt @db.UnsignedBigInt @Map("board_id")
     count Int  @default(0)
-    created_at DateTime @default(now())
+    createdAt DateTime @default(now()) @Map("created_at")
 }
 
 model image {
     id Int @default(autoincrement()) @id
     board board @relation(fields: [board_id], references: [id])
-    board_id BigInt @db.UnsignedBigInt
-    img_url String @db.VarChar(255)
+    boardId BigInt @db.UnsignedBigInt @Map("board_id")
+    imgUrl String @db.VarChar(255) @Map("img_url")
     created_at DateTime @default(now())
 }
