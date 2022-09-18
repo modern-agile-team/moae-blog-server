@@ -14,7 +14,7 @@ const SWAGGER_CUSTOM_OPTIONS: SwaggerCustomOptions = {
 };
 
 export function setupSwagger(app: INestApplication): void {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'dev') {
     const options: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
       .setTitle('Moae-Blog API Docs')
       .setDescription('Moae-Blog API Swagger 문서')
