@@ -3,9 +3,7 @@ import { board, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class BoardsRepository {
-  constructor(private readonly prisma: PrismaService) {}
-
+export class BoardsRepository extends PrismaService {
   /**
    * 게시글 전체를 조회하는 select문
    * @param skip
@@ -27,7 +25,7 @@ export class BoardsRepository {
     where?: Prisma.boardWhereInput;
     orderBy?: Prisma.boardOrderByWithRelationInput;
   }) {
-    return this.prisma.board.findMany({
+    return this.board.findMany({
       skip,
       take,
       cursor,
@@ -37,11 +35,11 @@ export class BoardsRepository {
   }
 
   /**
-   * 한명의 게시글 select문
+   * 한개의 게시글 select문
    * @param boardId
    */
   async selectOneBoard(boardId: Prisma.boardWhereUniqueInput) {
-    return this.prisma.user.findUnique({
+    return this.board.findUnique({
       where: boardId,
     });
   }
@@ -51,13 +49,13 @@ export class BoardsRepository {
    * @param data { title, userId, context }
    */
   async createBoard(data: Prisma.boardCreateInput): Promise<board> {
-    return this.prisma.board.create({
+    return this.board.create({
       data,
     });
   }
 
   /**
-   * 한명의 게시글 정보 update문
+   * 한개의 게시글 정보 update문
    * @param params { where, data }
    */
   async updateBoard(params: {
@@ -65,18 +63,18 @@ export class BoardsRepository {
     data: Prisma.boardUpdateInput;
   }): Promise<board> {
     const { where, data } = params;
-    return this.prisma.board.update({
+    return this.board.update({
       data,
       where,
     });
   }
 
   /**
-   * 한명의 게시글 delete문
+   * 한개의 게시글 delete문
    * @param where
    */
   async deleteBoard(where: Prisma.boardWhereUniqueInput): Promise<board> {
-    return this.prisma.board.delete({
+    return this.board.delete({
       where,
     });
   }
