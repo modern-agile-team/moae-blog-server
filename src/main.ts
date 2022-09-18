@@ -1,19 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigModule } from '@nestjs/config';
-import * as express from 'express';
+import { ConfigService } from '@nestjs/config';
+import { Logger, ValidationPipe } from '@nestjs/common';
+import { setupSwagger } from './config/swagger/swagger';
+import { VALIDATION_OPTIONS } from './config/validation/validation-pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  const logger: Logger = new Logger();
+  const configService = app.get(ConfigService);
+  const PORT = configService.get<number>('PORT');
 
-  ConfigModule.forRoot({
-    isGlobal: true,
-  });
+  /* Validation Pipe */
+  app.useGlobalPipes(new ValidationPipe(VALIDATION_OPTIONS));
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-  app.setGlobalPrefix('moae/api');
+  /* Swagger API Docs */
+  setupSwagger(app);
 
-  await app.listen(process.env.PORT);
+  await app.listen(PORT);
+  logger.log(`Start Run: ${PORT}`);
 }
 bootstrap();
