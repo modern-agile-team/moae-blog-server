@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import * as express from 'express';
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { setupSwagger } from './config/swagger/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -17,9 +17,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  // app.use(express.json());
-  // app.use(express.urlencoded({ extended: true }));
-  // app.setGlobalPrefix('moae/api');
+
+  setupSwagger(app);
 
   await app.listen(PORT);
   logger.log(`Start Run: ${PORT}`);
