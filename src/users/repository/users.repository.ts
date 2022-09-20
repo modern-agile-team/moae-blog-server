@@ -79,4 +79,16 @@ export class UsersRepository extends PrismaService {
       where,
     });
   }
+
+  /**
+   * 이메일을 통해 유저 정보 찾기
+   * @param email
+   */
+  async selectOneUserByEmail(email: string): Promise<user> {
+    return await this.user.findFirst({
+      where: {
+        email,
+      },
+    });
+  }
 }
