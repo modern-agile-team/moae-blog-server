@@ -6,10 +6,17 @@ import { JwtModule } from '@nestjs/jwt';
 import { JWT_CONFIG } from '../config/jwt/jwt.config';
 import { UsersRepository } from '../users/repository/users.repository';
 import { UsersService } from '../users/users.service';
+import { RefreshTokenStrategy } from '../common/strategy/refresh-token.strategy';
 
 @Module({
-  imports: [JwtModule.registerAsync(JWT_CONFIG)],
+  imports: [JwtModule.registerAsync(JWT_CONFIG), JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, UsersRepository, UsersService],
+  providers: [
+    AuthService,
+    GoogleStrategy,
+    UsersRepository,
+    UsersService,
+    RefreshTokenStrategy,
+  ],
 })
 export class AuthModule {}

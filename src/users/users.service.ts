@@ -7,13 +7,14 @@ import { UsersRepository } from './repository/users.repository';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async signInUser(user: CurrentUserDto): Promise<void> {
+  async signInUser(user: CurrentUserDto): Promise<user> {
     const selectedUser: user = await this.usersRepository.selectOneUserByEmail(
       user.email,
     );
 
     if (!selectedUser) {
-      await this.usersRepository.createUser(user);
+      return await this.usersRepository.createUser(user);
     }
+    return selectedUser;
   }
 }
