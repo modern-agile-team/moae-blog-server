@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { board, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateBoardDto } from '../dto/create-board.dto';
+import { SelectBoardDto } from '../dto/select-board.dto';
 
 @Injectable()
 export class BoardsRepository extends PrismaService {
@@ -13,19 +14,13 @@ export class BoardsRepository extends PrismaService {
    * @param where
    * @param orderBy
    */
-  async selectAllBoard({
+  async selectAllBoards({
     skip = 1,
-    take = 1,
+    take = 10,
     cursor,
     where,
     orderBy,
-  }: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.boardWhereUniqueInput;
-    where?: Prisma.boardWhereInput;
-    orderBy?: Prisma.boardOrderByWithRelationInput;
-  }) {
+  }: SelectBoardDto): Promise<board[]> {
     return this.board.findMany({
       skip,
       take,

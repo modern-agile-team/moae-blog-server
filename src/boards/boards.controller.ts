@@ -1,10 +1,32 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { board } from '@prisma/client';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { SelectBoardDto } from './dto/select-board.dto';
 
 @Controller('boards')
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Get()
+  async selectAllBoards(
+    @Query() selectBoardDto: SelectBoardDto,
+  ): Promise<object> {
+    const boards: board[] = await this.boardsService.selectAllBoards(
+      selectBoardDto,
+    );
+
+    return { success: true, message: '게시글 전체 조회 완료', data: boards };
+  }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
