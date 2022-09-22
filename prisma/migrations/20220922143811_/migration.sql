@@ -5,6 +5,7 @@ CREATE TABLE `user` (
     `email` VARCHAR(50) NOT NULL,
     `base_url` VARCHAR(191) NOT NULL DEFAULT 'https://www.google.com',
     `auth_code` INTEGER NOT NULL DEFAULT 0,
+    `refresh_token` VARCHAR(500) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 

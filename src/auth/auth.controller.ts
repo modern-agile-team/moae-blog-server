@@ -63,7 +63,7 @@ export class AuthController {
    * @header  bearer token
    * @returns cookie (accessToken, refreshToken) redirect
    *
-   * 저장하는 로직 필요 (만들꺼여~)
+   *
    */
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))

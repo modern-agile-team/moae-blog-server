@@ -16,6 +16,7 @@ model user {
     email String @db.VarChar(50)
     baseUrl String @default("https://www.google.com") @map("base_url")
     authCode  Int @default(0) @map("auth_code")
+    refreshToken String @db.VarChar(500) @map("refresh_token")
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
     likes like_rel[]
