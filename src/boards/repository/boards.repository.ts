@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { board, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CreateBoardDto } from '../dto/create-board.dto';
+import { SelectBoardDto } from '../dto/select-board.dto';
 
 @Injectable()
 export class BoardsRepository extends PrismaService {
@@ -12,19 +14,13 @@ export class BoardsRepository extends PrismaService {
    * @param where
    * @param orderBy
    */
-  async selectAllBoard({
+  async selectAllBoards({
     skip = 1,
-    take = 1,
+    take = 10,
     cursor,
     where,
     orderBy,
-  }: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.boardWhereUniqueInput;
-    where?: Prisma.boardWhereInput;
-    orderBy?: Prisma.boardOrderByWithRelationInput;
-  }) {
+  }: SelectBoardDto): Promise<board[]> {
     return this.board.findMany({
       skip,
       take,
@@ -46,12 +42,28 @@ export class BoardsRepository extends PrismaService {
 
   /**
    * 새로운 게시글 생성 create문
-   * @param data { title, userId, context }
+   * @CurrentUser userId - 작성자
+   * @Body createBoardDto { title, userId, context }
    */
-  async createBoard(data: Prisma.boardCreateInput): Promise<board> {
-    return this.board.create({
-      data,
-    });
+  async createBoard(
+    userId: number,
+    { title, context }: CreateBoardDto,
+  ): Promise<board> {
+    try {
+      return await this.board.create({
+        data: {
+          title,
+          context,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+        },
+      });
+    } catch (err) {
+      throw new InternalServerErrorException(`알 수 없는 서버 에러입니다.`);
+    }
   }
 
   /**
