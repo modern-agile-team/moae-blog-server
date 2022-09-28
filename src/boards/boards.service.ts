@@ -2,6 +2,7 @@ import { BadGatewayException, Injectable } from '@nestjs/common';
 import { board } from '@prisma/client';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
+import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardsRepository } from './repository/boards.repository';
 
 @Injectable()
@@ -32,6 +33,20 @@ export class BoardsService {
 
     if (!Object.keys(board).length) {
       throw new BadGatewayException('DB 저장 실패');
+    }
+  }
+
+  async updateBoard(
+    boardId: number,
+    updateBoardDto: UpdateBoardDto,
+  ): Promise<void> {
+    const updateResult: board = await this.boardsRepository.updateBoard(
+      boardId,
+      updateBoardDto,
+    );
+
+    if (!Object.keys(updateResult).length) {
+      throw new BadGatewayException('DB 수정 실패');
     }
   }
 }
