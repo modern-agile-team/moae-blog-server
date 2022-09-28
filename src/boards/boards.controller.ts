@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -53,5 +54,13 @@ export class BoardsController {
     }
 
     await this.boardsService.updateBoard(boardId, updateBoardDto);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':boardId')
+  async deleteBoard(
+    @Param('boardId', ParseIntPipe) boardId: number,
+  ): Promise<void> {
+    await this.boardsService.deleteBoard(boardId);
   }
 }

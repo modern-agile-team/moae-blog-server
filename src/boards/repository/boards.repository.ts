@@ -78,17 +78,21 @@ export class BoardsRepository extends PrismaService {
   ): Promise<board> {
     return this.board.update({
       data: updateBoardDto,
-      where: { id: boardId },
+      where: {
+        id: boardId,
+      },
     });
   }
 
   /**
    * 한개의 게시글 delete문
-   * @param where
+   * @param boardId 삭제할 게시글 고유번호
    */
-  async deleteBoard(where: Prisma.boardWhereUniqueInput): Promise<board> {
+  async deleteBoard(boardId: number): Promise<board> {
     return this.board.delete({
-      where,
+      where: {
+        id: boardId,
+      },
     });
   }
 }
