@@ -27,11 +27,7 @@ export class BoardsController {
   async selectAllBoards(
     @Query() selectBoardDto: SelectBoardDto,
   ): Promise<object> {
-    const boards: board[] = await this.boardsService.selectAllBoards(
-      selectBoardDto,
-    );
-
-    return { message: '게시글 전체 조회 완료', data: boards };
+    return { data: await this.boardsService.selectAllBoards(selectBoardDto) };
   }
 
   @HttpCode(HttpStatus.CREATED)
