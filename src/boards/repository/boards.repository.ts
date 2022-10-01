@@ -9,11 +9,12 @@ import { UpdateBoardDto } from '../dto/update-board.dto';
 export class BoardsRepository extends PrismaService {
   /**
    * 게시글 전체를 조회하는 select문
-   * @param skip
-   * @param take
-   * @param cursor
-   * @param where
-   * @param orderBy
+   * @param {skip, take, cursor, where, orderBy}
+   * param 순서에 맞게
+   * skip, take => Pagenation
+   * cursor => 범위 지정
+   * where => 조건
+   * orderBy => 정렬
    */
   async selectAllBoards({
     skip = 1,
