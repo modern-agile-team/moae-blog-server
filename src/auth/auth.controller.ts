@@ -69,10 +69,9 @@ export class AuthController {
   }
 
   /**
-   * LoginState - 로그인 상태 유지를 위한 refresh token을 통한 재발급
-   * @header  bearer token
-   * @returns cookie (accessToken, refreshToken) redirect
-   *
+   * LoginState - 로그인 상태 유지를 위한 refresh token 통한 재발급
+   * @header  bearer refresh token
+   * @returns body (accessToken, refreshToken)
    *
    */
   @Post('refresh')
