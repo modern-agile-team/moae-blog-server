@@ -2,6 +2,7 @@ import { BadGatewayException, Injectable } from '@nestjs/common';
 import { board } from '@prisma/client';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
+import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardsRepository } from './repository/boards.repository';
 
 @Injectable()
@@ -25,13 +26,37 @@ export class BoardsService {
     userId: number,
     createBoardDto: CreateBoardDto,
   ): Promise<void> {
-    const board: board = await this.boardsRepository.createBoard(
+    const createResult: board = await this.boardsRepository.createBoard(
       userId,
       createBoardDto,
     );
 
-    if (!Object.keys(board).length) {
+    if (!Object.keys(createResult).length) {
       throw new BadGatewayException('DB 저장 실패');
+    }
+  }
+
+  async updateBoard(
+    boardId: number,
+    updateBoardDto: UpdateBoardDto,
+  ): Promise<void> {
+    const updateResult: board = await this.boardsRepository.updateBoard(
+      boardId,
+      updateBoardDto,
+    );
+
+    if (!Object.keys(updateResult).length) {
+      throw new BadGatewayException('DB 수정 실패');
+    }
+  }
+
+  async deleteBoard(boardId: number): Promise<void> {
+    const deleteResult: board = await this.boardsRepository.deleteBoard(
+      boardId,
+    );
+
+    if (!Object.keys(deleteResult).length) {
+      throw new BadGatewayException('DB 삭제 실패');
     }
   }
 }
