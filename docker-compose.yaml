@@ -1,0 +1,15 @@
+version: '3.7'
+# DevelopMent
+services:
+  moae-blog-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./src:/moae-blog-server/src
+    env_file:
+      - ./.env
+    environment:
+      - TZ=Asia/Seoul
