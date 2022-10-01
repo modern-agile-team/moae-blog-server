@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
@@ -25,9 +25,23 @@ export class AuthService {
 
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: '7d',
-      secret: this.configService.get('JWT_SECRET'),
+      secret: this.configService.get('REFRESH_SECRET'),
     });
 
     return { accessToken, refreshToken };
+  }
+
+  async setAccessToken(payload: JwtPayload) {
+    return this.jwtService.sign(payload, {
+      expiresIn: '1d',
+      secret: this.configService.get('JWT_SECRET'),
+    });
+  }
+
+  async setRefreshToken(payload: JwtPayload) {
+    return this.jwtService.sign(payload, {
+      expiresIn: '7d',
+      secret: this.configService.get('REFRESH_SECRET'),
+    });
   }
 }

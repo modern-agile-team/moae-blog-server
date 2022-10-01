@@ -1,9 +1,12 @@
 import {
+  CACHE_MANAGER,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
+  Redirect,
   Req,
   Res,
   UseGuards,
@@ -13,10 +16,14 @@ import { CurrentUser } from './decorator/current-user.decorator';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { AuthService } from './auth.service';
 import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
+import { Cache } from 'cache-manager';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   /**
    * Google Login - Redirect path /users/google/redirect
@@ -36,6 +43,7 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   @HttpCode(HttpStatus.OK)
   @Get('google/redirect')
+  @Redirect('http://localhost:8080', 301)
   async signInWithGoogleRedirect(
     @CurrentUser() { ...user }: CurrentUserDto,
     @Res() res: any,
@@ -44,7 +52,6 @@ export class AuthController {
 
     const payload: JwtPayload = {
       sub: userInfo.id.toString(),
-      email: userInfo.email,
       authCode: userInfo.authCode,
     };
 
@@ -55,7 +62,10 @@ export class AuthController {
     res.cookie('access-token', accessToken);
     res.cookie('refresh-token', refreshToken);
 
-    return res.redirect('/');
+    await this.cacheManager.set(userInfo.id.toString(), refreshToken, {
+      ttl: 604800,
+    });
+    return;
   }
 
   /**
@@ -67,16 +77,26 @@ export class AuthController {
    */
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
-  async refreshToken(@Req() req: any, @Res() res: any) {
-    const { refreshToken, sub, email, authCode } = req.user as JwtPayload & {
+  async refreshToken(@Req() req: any) {
+    const { refreshToken, sub, authCode } = req.user as JwtPayload & {
       refreshToken: string;
     };
+    const accessToken = await this.authService.setAccessToken({
+      sub,
+      authCode,
+    });
 
-    const tokens = await this.authService.setToken({ sub, email, authCode });
+    const redisRefreshToken = await this.cacheManager.get(sub);
 
-    res.cookie('access-token', tokens.accessToken);
-    res.cookie('refresh-token', tokens.refreshToken);
+    if (!redisRefreshToken) {
+      const refreshToken = await this.authService.setRefreshToken({
+        sub,
+        authCode,
+      });
+      await this.cacheManager.set(sub, refreshToken, { ttl: 604800 });
 
-    res.redirect('/');
+      return { accessToken, refreshToken };
+    }
+    return { accessToken, refreshToken };
   }
 }

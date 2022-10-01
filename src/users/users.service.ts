@@ -13,6 +13,7 @@ export class UsersService {
     );
 
     if (!selectedUser) {
+      delete user.accessToken;
       return await this.usersRepository.createUser(user);
     }
     return selectedUser;
