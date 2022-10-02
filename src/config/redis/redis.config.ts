@@ -6,9 +6,12 @@ export const cacheModule = CacheModule.registerAsync({
   imports: [ConfigModule],
   inject: [ConfigService],
   useFactory: async (configService: ConfigService) => ({
-    store: redisStore,
-    host: configService.get<string>('REDIS_HOST'),
-    port: +configService.get<number>('REDIS_PORT'),
-    isGlobal: true,
+    name: 'redis-server',
+    options: {
+      store: redisStore,
+      host: configService.get<string>('REDIS_HOST'),
+      port: +configService.get<number>('REDIS_PORT'),
+      isGlobal: true,
+    },
   }),
 });
