@@ -14,7 +14,7 @@ export class CommentsRepository extends PrismaService {
    * @param where
    * @param orderBy
    */
-  async selectAllComment({
+  selectAllComment({
     skip = 1,
     take = 10,
     cursor,
@@ -38,7 +38,7 @@ export class CommentsRepository extends PrismaService {
    * 한개의 댓글 select문
    * @param commentId
    */
-  async selectOneComment(commentId: Prisma.commentWhereUniqueInput) {
+  selectOneComment(commentId: Prisma.commentWhereUniqueInput) {
     return this.comment.findUnique({
       where: commentId,
     });
@@ -48,13 +48,13 @@ export class CommentsRepository extends PrismaService {
    * 새로운 댓글 생성 create문
    * @param data { userId, boardId, context }
    */
-  async createComment({
+  createComment({
     userId,
     boardId,
     context,
   }: CreateCommentDto): Promise<comment> {
     try {
-      return await this.comment.create({
+      return this.comment.create({
         data: {
           context,
           user: {
@@ -78,7 +78,7 @@ export class CommentsRepository extends PrismaService {
    * 한개의 댓글 정보 update문
    * @param params { where, data }
    */
-  async updateComment(params: {
+  updateComment(params: {
     where: Prisma.commentWhereUniqueInput;
     data: Prisma.commentUpdateInput;
   }): Promise<comment> {
@@ -93,7 +93,7 @@ export class CommentsRepository extends PrismaService {
    * 한개의 댓글 delete문
    * @param where
    */
-  async deleteComment(where: Prisma.commentWhereUniqueInput): Promise<comment> {
+  deleteComment(where: Prisma.commentWhereUniqueInput): Promise<comment> {
     return this.comment.delete({
       where,
     });
