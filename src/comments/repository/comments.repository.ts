@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { comment, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CreateCommentDto } from '../dto/create-comment.dto';
 
 @Injectable()
 export class CommentsRepository extends PrismaService {
@@ -48,10 +49,30 @@ export class CommentsRepository extends PrismaService {
    * 새로운 댓글 생성 create문
    * @param data { userId, boardId, context }
    */
-  async createComment(data: Prisma.commentCreateInput): Promise<comment> {
-    return this.comment.create({
-      data,
-    });
+  async createComment({
+    userId,
+    boardId,
+    context,
+  }: CreateCommentDto): Promise<comment> {
+    try {
+      return await this.comment.create({
+        data: {
+          context,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          board: {
+            connect: {
+              id: boardId,
+            },
+          },
+        },
+      });
+    } catch {
+      throw new InternalServerErrorException('알 수 없는 서버 에러입니다.');
+    }
   }
 
   /**
