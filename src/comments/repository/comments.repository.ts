@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { comment, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCommentDto } from '../dto/create-comment.dto';
+import { SelectCommentDto } from '../dto/select-comment.dto';
 
 @Injectable()
 export class CommentsRepository extends PrismaService {
@@ -15,24 +16,22 @@ export class CommentsRepository extends PrismaService {
    */
   async selectAllComment({
     skip = 1,
-    take = 1,
+    take = 10,
     cursor,
     where,
     orderBy,
-  }: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.commentWhereUniqueInput;
-    where?: Prisma.commentWhereInput;
-    orderBy?: Prisma.commentOrderByWithRelationInput;
-  }) {
-    return this.comment.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
+  }: SelectCommentDto): Promise<comment[]> {
+    try {
+      return this.comment.findMany({
+        skip,
+        take,
+        cursor,
+        where,
+        orderBy,
+      });
+    } catch {
+      throw new InternalServerErrorException('알 수 없는 서버 에러입니다.');
+    }
   }
 
   /**
