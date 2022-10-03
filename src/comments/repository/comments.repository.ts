@@ -45,13 +45,13 @@ export class CommentsRepository extends PrismaService {
 
   /**
    * 새로운 댓글 생성 create문
-   * @param data { userId, boardId, context }
+   * @param boardId 댓글을 생성하려는 게시글 고유 번호
+   * @param data { userId, context }
    */
-  createComment({
-    userId,
-    boardId,
-    context,
-  }: CreateCommentDto): Promise<comment> {
+  createComment(
+    boardId: number,
+    { userId, context }: CreateCommentDto,
+  ): Promise<comment> {
     try {
       return this.comment.create({
         data: {

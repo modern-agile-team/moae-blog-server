@@ -6,10 +6,6 @@ export class CreateCommentDto {
   userId: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  boardId: number;
-
-  @IsNotEmpty()
   @IsString()
   @Length(1, 500)
   context: string;

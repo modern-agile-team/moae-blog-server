@@ -21,8 +21,12 @@ export class CommentsService {
     });
   }
 
-  async createComment(createCommentDto: CreateCommentDto): Promise<void> {
+  async createComment(
+    boardId: number,
+    createCommentDto: CreateCommentDto,
+  ): Promise<void> {
     const comment: comment = await this.commentsRepository.createComment(
+      boardId,
       createCommentDto,
     );
 

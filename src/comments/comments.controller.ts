@@ -36,9 +36,10 @@ export class CommentsController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createComment(
+    @Param('boardId', ParseIntPipe) boardId: number,
     @Body() createCommentDto: CreateCommentDto,
   ): Promise<void> {
-    await this.commentsService.createComment(createCommentDto);
+    await this.commentsService.createComment(boardId, createCommentDto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
