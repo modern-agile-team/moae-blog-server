@@ -17,16 +17,20 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { SelectCommentDto } from './dto/select-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
-@Controller('comments')
+@Controller('boards/:boardId/comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @HttpCode(HttpStatus.OK)
   @Get()
   async selectAllComments(
+    @Param('boardId', ParseIntPipe) boardId: number,
     @Query() selectCommentDto: SelectCommentDto,
   ): Promise<comment[]> {
-    return await this.commentsService.selectAllComments(selectCommentDto);
+    return await this.commentsService.selectAllComments(
+      boardId,
+      selectCommentDto,
+    );
   }
 
   @HttpCode(HttpStatus.CREATED)

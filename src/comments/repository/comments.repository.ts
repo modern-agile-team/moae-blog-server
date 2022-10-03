@@ -8,25 +8,24 @@ import { SelectCommentDto } from '../dto/select-comment.dto';
 export class CommentsRepository extends PrismaService {
   /**
    * 댓글 전체를 조회하는 select문
-   * @param skip
-   * @param take
-   * @param cursor
-   * @param where
-   * @param orderBy
+   * @param boardId 게시글 고유 번호
+   * @param skip 페이지 네이션(페이지)
+   * @param take 페이지 네이션(불러올 개수)
+   * @param cursor 페이지 범위
+   * @param orderBy 정렬
    */
-  selectAllComment({
-    skip = 1,
-    take = 10,
-    cursor,
-    where,
-    orderBy,
-  }: SelectCommentDto): Promise<comment[]> {
+  selectAllComment(
+    boardId: number,
+    { skip = 1, take = 10, cursor, orderBy }: SelectCommentDto,
+  ): Promise<comment[]> {
     try {
       return this.comment.findMany({
         skip,
         take,
         cursor,
-        where,
+        where: {
+          boardId,
+        },
         orderBy,
       });
     } catch {

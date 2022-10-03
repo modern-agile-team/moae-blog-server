@@ -8,13 +8,13 @@ import { CommentsRepository } from './repository/comments.repository';
 export class CommentsService {
   constructor(private readonly commentsRepository: CommentsRepository) {}
 
-  async selectAllComments({
-    skip = 0,
-    ...selectOptions
-  }: SelectCommentDto): Promise<comment[]> {
+  async selectAllComments(
+    boardId: number,
+    { skip = 0, ...selectOptions }: SelectCommentDto,
+  ): Promise<comment[]> {
     const PER_PAGE = 10;
 
-    return await this.commentsRepository.selectAllComment({
+    return await this.commentsRepository.selectAllComment(boardId, {
       skip: PER_PAGE * (Number(skip) > 0 ? Number(skip) - 1 : 0),
       orderBy: { id: 'asc' },
       ...selectOptions,
