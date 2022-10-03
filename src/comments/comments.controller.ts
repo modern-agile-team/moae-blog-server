@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -43,5 +44,13 @@ export class CommentsController {
     @Body() { context }: UpdateCommentDto,
   ): Promise<void> {
     await this.commentsService.updateComment(commentId, context);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':commentId')
+  async deleteComment(
+    @Param('commentId', ParseIntPipe) commentId: number,
+  ): Promise<void> {
+    await this.commentsService.deleteComment(commentId);
   }
 }

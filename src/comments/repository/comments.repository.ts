@@ -96,11 +96,13 @@ export class CommentsRepository extends PrismaService {
 
   /**
    * 한개의 댓글 delete문
-   * @param where
+   * @param commentId 삭제할 댓글 고유 번호
    */
-  deleteComment(where: Prisma.commentWhereUniqueInput): Promise<comment> {
+  deleteComment(commentId: number): Promise<comment> {
     return this.comment.delete({
-      where,
+      where: {
+        id: commentId,
+      },
     });
   }
 }

@@ -41,4 +41,14 @@ export class CommentsService {
       throw new BadGatewayException('댓글 수정 실패');
     }
   }
+
+  async deleteComment(commentId: number): Promise<void> {
+    const comment: comment = await this.commentsRepository.deleteComment(
+      commentId,
+    );
+
+    if (!Object.keys(comment).length) {
+      throw new BadGatewayException('댓글 삭제 실패');
+    }
+  }
 }

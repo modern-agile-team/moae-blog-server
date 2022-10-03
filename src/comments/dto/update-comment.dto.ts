@@ -1,8 +1,6 @@
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { PickType } from '@nestjs/swagger';
+import { CreateCommentDto } from './create-comment.dto';
 
-export class UpdateCommentDto {
-  @IsNotEmpty()
-  @IsString()
-  @Length(1, 500)
-  context: string;
-}
+export class UpdateCommentDto extends PickType(CreateCommentDto, [
+  'context',
+] as const) {}
