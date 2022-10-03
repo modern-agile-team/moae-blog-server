@@ -76,17 +76,22 @@ export class CommentsRepository extends PrismaService {
 
   /**
    * 한개의 댓글 정보 update문
-   * @param params { where, data }
+   * @param commentId 댓글 고유 번호
+   * @param context 수정된 댓글 내용
    */
-  updateComment(params: {
-    where: Prisma.commentWhereUniqueInput;
-    data: Prisma.commentUpdateInput;
-  }): Promise<comment> {
-    const { where, data } = params;
-    return this.comment.update({
-      data,
-      where,
-    });
+  updateComment(commentId: number, context: string): Promise<comment> {
+    try {
+      return this.comment.update({
+        data: {
+          context,
+        },
+        where: {
+          id: commentId,
+        },
+      });
+    } catch {
+      throw new InternalServerErrorException('알 수 없는 서버 에러입니다.');
+    }
   }
 
   /**

@@ -26,8 +26,19 @@ export class CommentsService {
       createCommentDto,
     );
 
-    if (!comment) {
+    if (!Object.keys(comment).length) {
       throw new BadGatewayException('댓글 작성 실패');
+    }
+  }
+
+  async updateComment(commentId: number, context: string): Promise<void> {
+    const comment: comment = await this.commentsRepository.updateComment(
+      commentId,
+      context,
+    );
+
+    if (!Object.keys(comment).length) {
+      throw new BadGatewayException('댓글 수정 실패');
     }
   }
 }
