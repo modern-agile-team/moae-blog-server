@@ -18,8 +18,8 @@ services:
       dockerfile: dockerfile
     ports:
       - 8080:8080
-    volumes:
-      - ./src:/moae-blog-server/src
+    image: moae-blog
+    container_name: moae-blog
     env_file:
       - ./.env
     environment:
