@@ -15,12 +15,12 @@ import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
-@Controller('boards/:boardId/comments')
+@Controller('board/:boardId/comment')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Get()
+  @Get('all')
   async selectAllComments(
     @Param('boardId', ParseIntPipe) boardId: number,
   ): Promise<comment[]> {
