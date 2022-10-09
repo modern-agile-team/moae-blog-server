@@ -1,10 +1,8 @@
 import {
-  CACHE_MANAGER,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
   Redirect,
   Req,
@@ -16,13 +14,13 @@ import { CurrentUser } from './decorator/current-user.decorator';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { AuthService } from './auth.service';
 import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
-import { Cache } from 'cache-manager';
+import { CacheService } from '../cache/cache.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly cacheService: CacheService,
   ) {}
 
   /**
@@ -62,9 +60,7 @@ export class AuthController {
     res.cookie('access-token', accessToken);
     res.cookie('refresh-token', refreshToken);
 
-    await this.cacheManager.set(userInfo.id.toString(), refreshToken, {
-      ttl: 604800,
-    });
+    await this.cacheService.set(userInfo.id.toString(), refreshToken, 604800);
     return;
   }
 
@@ -85,14 +81,14 @@ export class AuthController {
       authCode,
     });
 
-    const redisRefreshToken = await this.cacheManager.get(sub);
+    const redisRefreshToken = await this.cacheService.get(sub);
 
     if (!redisRefreshToken) {
       const refreshToken = await this.authService.setRefreshToken({
         sub,
         authCode,
       });
-      await this.cacheManager.set(sub, refreshToken, { ttl: 604800 });
+      await this.cacheService.set(sub, refreshToken, 604800);
 
       return { accessToken, refreshToken };
     }

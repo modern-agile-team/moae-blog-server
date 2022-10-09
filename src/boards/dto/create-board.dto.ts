@@ -4,6 +4,7 @@ export class CreateBoardDto {
   @IsNotEmpty()
   @IsString()
   title: string;
+
   @IsNotEmpty()
   @IsString()
   context: string;
