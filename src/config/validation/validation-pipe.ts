@@ -6,7 +6,7 @@ export const VALIDATION_OPTIONS = {
   forbidNonWhitelisted: true,
   transform: true,
   exceptionFactory: (validationErrors: ValidationError[] = []) => {
-    if (process.env.NODE_ENV === 'dev') {
+    if (process.env.NODE_ENV === 'development') {
       const logger = new Logger();
 
       validationErrors.forEach(({ property, constraints }) => {

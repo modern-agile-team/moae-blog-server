@@ -26,8 +26,8 @@ export class BoardsController {
   @Get()
   async selectAllBoards(
     @Query() selectBoardDto: SelectBoardDto,
-  ): Promise<object> {
-    return { data: await this.boardsService.selectAllBoards(selectBoardDto) };
+  ): Promise<board[]> {
+    return await this.boardsService.selectAllBoards(selectBoardDto);
   }
 
   @HttpCode(HttpStatus.CREATED)
