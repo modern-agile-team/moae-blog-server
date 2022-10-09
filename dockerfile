@@ -15,5 +15,4 @@ RUN npx prisma generate
 RUN npm ci
 RUN npm i -g @nestjs/cli@8.2.6
 
-# COPY . /moae-blog-server/dist
 CMD ["npm", "run", "start:prod"]
