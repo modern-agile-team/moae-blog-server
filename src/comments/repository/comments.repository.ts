@@ -1,7 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { comment, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateCommentDto } from '../dto/create-comment.dto';
 
 @Injectable()
 export class CommentsRepository extends PrismaService {
@@ -40,12 +39,14 @@ export class CommentsRepository extends PrismaService {
 
   /**
    * 새로운 댓글 생성 create문
+   * @param userId 로그인한 유저의 고유번호
    * @param boardId 댓글을 생성하려는 게시글 고유 번호
-   * @param data { userId, context }
+   * @param context 댓글 내용
    */
   createComment(
+    userId: number,
     boardId: number,
-    { userId, context }: CreateCommentDto,
+    context: string,
   ): Promise<comment> {
     try {
       return this.comment.create({

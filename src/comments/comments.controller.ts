@@ -9,12 +9,16 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { comment } from '@prisma/client';
+import { User } from 'src/common/decorators/user.decorator';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('board/:boardId/comment')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
@@ -30,10 +34,11 @@ export class CommentsController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createComment(
+    @User() userId: number,
     @Param('boardId', ParseIntPipe) boardId: number,
-    @Body() createCommentDto: CreateCommentDto,
-  ): Promise<void> {
-    await this.commentsService.createComment(boardId, createCommentDto);
+    @Body() { context }: CreateCommentDto,
+  ): Promise<comment> {
+    return await this.commentsService.createComment(userId, boardId, context);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

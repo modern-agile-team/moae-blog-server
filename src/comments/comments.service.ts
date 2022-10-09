@@ -1,6 +1,5 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
 import { comment } from '@prisma/client';
-import { CreateCommentDto } from './dto/create-comment.dto';
 import { CommentsRepository } from './repository/comments.repository';
 
 @Injectable()
@@ -12,17 +11,15 @@ export class CommentsService {
   }
 
   async createComment(
+    userId: number,
     boardId: number,
-    createCommentDto: CreateCommentDto,
-  ): Promise<void> {
-    const comment: comment = await this.commentsRepository.createComment(
+    context: string,
+  ): Promise<comment> {
+    return await this.commentsRepository.createComment(
+      userId,
       boardId,
-      createCommentDto,
+      context,
     );
-
-    if (!Object.keys(comment).length) {
-      throw new BadGatewayException('댓글 작성 실패');
-    }
   }
 
   async updateComment(commentId: number, context: string): Promise<void> {
