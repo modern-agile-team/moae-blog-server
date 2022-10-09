@@ -74,14 +74,19 @@ export class CommentsRepository extends PrismaService {
    * @param commentId 댓글 고유 번호
    * @param context 수정된 댓글 내용
    */
-  updateComment(commentId: number, context: string): Promise<comment> {
+  updateComment(
+    userId: number,
+    commentId: number,
+    context: string,
+  ): Promise<Prisma.BatchPayload> {
     try {
-      return this.comment.update({
+      return this.comment.updateMany({
         data: {
           context,
         },
         where: {
           id: commentId,
+          userId,
         },
       });
     } catch {

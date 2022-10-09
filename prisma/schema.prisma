@@ -2,15 +2,15 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
-model user {
+model User {
     id Int  @default(autoincrement()) @id @db.UnsignedInt
     name String @db.VarChar(50)
     email String @db.VarChar(50)
@@ -18,42 +18,42 @@ model user {
     authCode  Int @default(0) @map("auth_code")
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
-    likes like_rel[]
-    boards board[]
-    comments comment[]
+    likes Like_rel[]
+    boards Board[]
+    comments Comment[]
 
     @@unique([email, name])
 }
 
-model board {
+model Board {
     id Int  @default(autoincrement()) @id @db.UnsignedInt
     title String @db.VarChar(50)
-    user user @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id])
     userId Int @db.UnsignedInt @map("user_id")
     context String @db.VarChar(512)
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
-    likes like_rel[]
-    comments comment[]
+    likes Like_rel[]
+    comments Comment[]
     images image[]
 }
 
-model comment {
+model Comment {
     id Int  @default(autoincrement()) @id
-    user user @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id])
     userId Int @db.UnsignedInt @map("user_id")
-    board board @relation(fields: [boardId], references: [id])
+    board Board @relation(fields: [boardId], references: [id])
     boardId Int @db.UnsignedInt @map("board_id")
     context String @db.VarChar(512)
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 }
 
-model like_rel {
+model Like_rel {
     id Int  @default(autoincrement()) @id
-    user user @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id])
     userId Int @db.UnsignedInt @map("user_id")
-    board board @relation(fields: [boardId], references: [id])
+    board Board @relation(fields: [boardId], references: [id])
     boardId Int @db.UnsignedInt @map("board_id")
     count Int  @default(0)
     createdAt DateTime @default(now()) @map("created_at")
@@ -61,7 +61,7 @@ model like_rel {
 
 model image {
     id Int @default(autoincrement()) @id
-    board board @relation(fields: [boardId], references: [id])
+    board Board @relation(fields: [boardId], references: [id])
     boardId Int @db.UnsignedInt @map("board_id")
     imgUrl String @db.VarChar(255) @map("img_url")
     created_at DateTime @default(now())

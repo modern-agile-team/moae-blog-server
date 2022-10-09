@@ -1,5 +1,5 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
-import { comment } from '@prisma/client';
+import { comment, Prisma } from '@prisma/client';
 import { CommentsRepository } from './repository/comments.repository';
 
 @Injectable()
@@ -22,15 +22,16 @@ export class CommentsService {
     );
   }
 
-  async updateComment(commentId: number, context: string): Promise<void> {
-    const comment: comment = await this.commentsRepository.updateComment(
+  async updateComment(
+    userId: number,
+    commentId: number,
+    context: string,
+  ): Promise<Prisma.BatchPayload> {
+    return await this.commentsRepository.updateComment(
+      userId,
       commentId,
       context,
     );
-
-    if (!Object.keys(comment).length) {
-      throw new BadGatewayException('댓글 수정 실패');
-    }
   }
 
   async deleteComment(commentId: number): Promise<void> {

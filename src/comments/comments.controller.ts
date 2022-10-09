@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { comment } from '@prisma/client';
+import { comment, Prisma } from '@prisma/client';
 import { User } from 'src/common/decorators/user.decorator';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -41,13 +41,14 @@ export class CommentsController {
     return await this.commentsService.createComment(userId, boardId, context);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @Put(':commentId')
   async updateComment(
+    @User() userId: number,
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() { context }: UpdateCommentDto,
-  ): Promise<void> {
-    await this.commentsService.updateComment(commentId, context);
+  ): Promise<Prisma.BatchPayload> {
+    return await this.commentsService.updateComment(userId, commentId, context);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
