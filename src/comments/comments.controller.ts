@@ -9,28 +9,22 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { comment } from '@prisma/client';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { SelectCommentDto } from './dto/select-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
-@Controller('boards/:boardId/comments')
+@Controller('board/:boardId/comment')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Get()
+  @Get('all')
   async selectAllComments(
     @Param('boardId', ParseIntPipe) boardId: number,
-    @Query() selectCommentDto: SelectCommentDto,
   ): Promise<comment[]> {
-    return await this.commentsService.selectAllComments(
-      boardId,
-      selectCommentDto,
-    );
+    return await this.commentsService.selectAllComments(boardId);
   }
 
   @HttpCode(HttpStatus.CREATED)

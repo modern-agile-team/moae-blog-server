@@ -2,31 +2,26 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { comment, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCommentDto } from '../dto/create-comment.dto';
-import { SelectCommentDto } from '../dto/select-comment.dto';
 
 @Injectable()
 export class CommentsRepository extends PrismaService {
   /**
    * 댓글 전체를 조회하는 select문
    * @param boardId 게시글 고유 번호
-   * @param skip 페이지 네이션(페이지)
-   * @param take 페이지 네이션(불러올 개수)
-   * @param cursor 페이지 범위
    * @param orderBy 정렬
    */
   selectAllComment(
     boardId: number,
-    { skip = 1, take = 10, cursor, orderBy }: SelectCommentDto,
+    orderBy = 'asc' as Prisma.SortOrder,
   ): Promise<comment[]> {
     try {
       return this.comment.findMany({
-        skip,
-        take,
-        cursor,
         where: {
           boardId,
         },
-        orderBy,
+        orderBy: {
+          id: orderBy,
+        },
       });
     } catch {
       throw new InternalServerErrorException('알 수 없는 서버 에러입니다.');

@@ -1,24 +1,14 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
 import { comment } from '@prisma/client';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { SelectCommentDto } from './dto/select-comment.dto';
 import { CommentsRepository } from './repository/comments.repository';
 
 @Injectable()
 export class CommentsService {
   constructor(private readonly commentsRepository: CommentsRepository) {}
 
-  async selectAllComments(
-    boardId: number,
-    { skip = 0, ...selectOptions }: SelectCommentDto,
-  ): Promise<comment[]> {
-    const PER_PAGE = 10;
-
-    return await this.commentsRepository.selectAllComment(boardId, {
-      skip: PER_PAGE * (Number(skip) > 0 ? Number(skip) - 1 : 0),
-      orderBy: { id: 'asc' },
-      ...selectOptions,
-    });
+  async selectAllComments(boardId: number): Promise<comment[]> {
+    return await this.commentsRepository.selectAllComment(boardId);
   }
 
   async createComment(
