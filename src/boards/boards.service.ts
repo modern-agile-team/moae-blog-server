@@ -25,15 +25,8 @@ export class BoardsService {
   async createBoard(
     userId: number,
     createBoardDto: CreateBoardDto,
-  ): Promise<void> {
-    const createResult: board = await this.boardsRepository.createBoard(
-      userId,
-      createBoardDto,
-    );
-
-    if (!Object.keys(createResult).length) {
-      throw new BadGatewayException('DB 저장 실패');
-    }
+  ): Promise<board> {
+    return await this.boardsRepository.createBoard(userId, createBoardDto);
   }
 
   async updateBoard(

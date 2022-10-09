@@ -64,7 +64,7 @@ export class BoardsRepository extends PrismaService {
         },
       });
     } catch (err) {
-      throw new InternalServerErrorException(`알 수 없는 서버 에러입니다.`);
+      throw new InternalServerErrorException(`서버 에러입니다`);
     }
   }
 

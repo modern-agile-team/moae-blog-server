@@ -11,12 +11,15 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { board } from '@prisma/client';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from '../common/decorators/user.decorator';
 
 @Controller('boards')
 export class BoardsController {
@@ -32,11 +35,12 @@ export class BoardsController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createBoard(@Body() createBoardDto: CreateBoardDto): Promise<void> {
-    // Test User ID, AuthGuard 부착 후 제거할 예정
-    const userId = 1;
-
-    await this.boardsService.createBoard(userId, createBoardDto);
+  @UseGuards(AuthGuard('jwt'))
+  async createBoard(
+    @Body() createBoardDto: CreateBoardDto,
+    @User() userId: number,
+  ): Promise<board> {
+    return await this.boardsService.createBoard(userId, createBoardDto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
