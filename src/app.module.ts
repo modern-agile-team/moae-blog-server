@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { BoardsModule } from './boards/boards.module';
 import { CommentsModule } from './comments/comments.module';
 import { LikesModule } from './likes/likes.module';
 import { ImagesModule } from './images/images.module';
 import { AuthModule } from './auth/auth.module';
-import { cacheModule } from './config/redis/redis.config';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { RedisConfigService } from './cache/cache.config';
 
 @Module({
   imports: [
@@ -19,7 +20,11 @@ import { cacheModule } from './config/redis/redis.config';
     LikesModule,
     ImagesModule,
     AuthModule,
-    cacheModule,
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: RedisConfigService,
+      inject: [ConfigService],
+    }),
   ],
 })
 export class AppModule {}
