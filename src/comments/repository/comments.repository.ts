@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { comment, Prisma } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { CommentEntity } from '../entity/comment.entity';
 
 @Injectable()
-export class CommentsRepository extends PrismaService {
+export class CommentsRepository {
+  private comment;
+  constructor(private readonly commentEntity: CommentEntity) {
+    this.comment = commentEntity.comment;
+  }
   /**
    * 댓글 전체를 조회하는 select문
    * @param boardId 게시글 고유 번호
@@ -20,16 +24,6 @@ export class CommentsRepository extends PrismaService {
       orderBy: {
         id: orderBy,
       },
-    });
-  }
-
-  /**
-   * 한개의 댓글 select문
-   * @param commentId
-   */
-  selectOneComment(commentId: Prisma.commentWhereUniqueInput) {
-    return this.comment.findUnique({
-      where: commentId,
     });
   }
 
