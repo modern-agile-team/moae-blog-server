@@ -10,7 +10,7 @@ export class CommentsRepository {
    * @param boardId 게시글 고유 번호
    * @param orderBy 정렬
    */
-  selectAllComment(
+  getAll(
     boardId: number,
     orderBy = 'asc' as Prisma.SortOrder,
   ): Promise<comment[]> {
@@ -30,11 +30,7 @@ export class CommentsRepository {
    * @param boardId 댓글을 생성하려는 게시글 고유 번호
    * @param context 댓글 내용
    */
-  createComment(
-    userId: number,
-    boardId: number,
-    context: string,
-  ): Promise<comment> {
+  create(userId: number, boardId: number, context: string): Promise<comment> {
     return this.repository.comment.create({
       data: {
         context,
@@ -57,7 +53,7 @@ export class CommentsRepository {
    * @param commentId 댓글 고유 번호
    * @param context 수정된 댓글 내용
    */
-  updateComment(
+  update(
     userId: number,
     commentId: number,
     context: string,
@@ -78,10 +74,7 @@ export class CommentsRepository {
    * @param userId 삭제하려는 댓글 작성자
    * @param commentId 삭제할 댓글 고유 번호
    */
-  deleteComment(
-    userId: number,
-    commentId: number,
-  ): Promise<Prisma.BatchPayload> {
+  delete(userId: number, commentId: number): Promise<Prisma.BatchPayload> {
     return this.repository.comment.deleteMany({
       where: {
         id: commentId,

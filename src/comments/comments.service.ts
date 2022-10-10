@@ -6,38 +6,30 @@ import { CommentsRepository } from './repository/comments.repository';
 export class CommentsService {
   constructor(private readonly commentsRepository: CommentsRepository) {}
 
-  async selectAllComments(boardId: number): Promise<comment[]> {
-    return await this.commentsRepository.selectAllComment(boardId);
+  async getAll(boardId: number): Promise<comment[]> {
+    return await this.commentsRepository.getAll(boardId);
   }
 
-  async createComment(
+  async create(
     userId: number,
     boardId: number,
     context: string,
   ): Promise<comment> {
-    return await this.commentsRepository.createComment(
-      userId,
-      boardId,
-      context,
-    );
+    return await this.commentsRepository.create(userId, boardId, context);
   }
 
-  async updateComment(
+  async update(
     userId: number,
     commentId: number,
     context: string,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentsRepository.updateComment(
-      userId,
-      commentId,
-      context,
-    );
+    return await this.commentsRepository.update(userId, commentId, context);
   }
 
-  async deleteComment(
+  async delete(
     userId: number,
     commentId: number,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentsRepository.deleteComment(userId, commentId);
+    return await this.commentsRepository.delete(userId, commentId);
   }
 }
