@@ -36,6 +36,23 @@ model board {
     likes like_rel[]
     comments comment[]
     images image[]
+    categories categories_on_boards[]
+}
+
+model category {
+    id    Int   @db.UnsignedInt @id @default(autoincrement())
+    name  String @db.VarChar(30)
+    createdAt DateTime @default(now()) @map("created_at")
+    boards categories_on_boards[]
+}
+
+model categories_on_boards {
+    board       board     @relation(fields: [boardId], references: [id])
+    boardId     Int @db.UnsignedInt @map("board_id") // relation scalar field (used in the `@relation` attribute above)
+    category   category @relation(fields: [categoryId], references: [id])
+    categoryId Int @db.UnsignedInt @map("category_id") // relation scalar field (used in the `@relation` attribute above)
+
+    @@id([boardId, categoryId])
 }
 
 model comment {
