@@ -36,9 +36,7 @@ export class PrismaService
     });
   }
   async onModuleInit() {
-    await this.$connect();
-
-    if (this.configService.get('NODE_ENV') === 'dev') {
+    if (this.configService.get('NODE_ENV') === 'development') {
       this.$on('query', (event) => {
         this.logger.verbose(event.query, event.duration);
       });
@@ -47,6 +45,8 @@ export class PrismaService
     this.$on('error', (event) => {
       this.logger.verbose(event.target);
     });
+
+    await this.$connect();
   }
 
   async enableShutdownHooks(app: INestApplication) {

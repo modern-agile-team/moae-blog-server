@@ -4,9 +4,14 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CreateBoardDto } from '../dto/create-board.dto';
 import { SelectBoardDto } from '../dto/select-board.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
+import { BoardsEntity } from '../boards.entity';
 
 @Injectable()
-export class BoardsRepository extends PrismaService {
+export class BoardsRepository {
+  private board;
+  constructor(private readonly boardEntity: BoardsEntity) {
+    this.board = boardEntity.board;
+  }
   /**
    * 게시글 전체를 조회하는 select문
    * @param {skip, take, cursor, where, orderBy}
