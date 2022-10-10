@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './config/swagger/swagger';
 import { VALIDATION_OPTIONS } from './config/validation/validation-pipe';
+import { PrismaKnownFilter } from './common/filters/prisma-known.filter';
+import { PrismaUnKnownFilter } from './common/filters/prisma-known.filter copy';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -15,6 +17,10 @@ async function bootstrap() {
 
   /* Validation Pipe */
   app.useGlobalPipes(new ValidationPipe(VALIDATION_OPTIONS));
+  app.useGlobalFilters(
+    new PrismaKnownFilter(logger),
+    new PrismaUnKnownFilter(logger),
+  );
 
   /* Swagger API Docs */
   setupSwagger(app);

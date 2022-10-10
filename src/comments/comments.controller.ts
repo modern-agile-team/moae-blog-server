@@ -9,12 +9,16 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-import { comment } from '@prisma/client';
+import { AuthGuard } from '@nestjs/passport';
+import { comment, Prisma } from '@prisma/client';
+import { User } from 'src/common/decorators/user.decorator';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('board/:boardId/comment')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
@@ -30,19 +34,21 @@ export class CommentsController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createComment(
+    @User() userId: number,
     @Param('boardId', ParseIntPipe) boardId: number,
-    @Body() createCommentDto: CreateCommentDto,
-  ): Promise<void> {
-    await this.commentsService.createComment(boardId, createCommentDto);
+    @Body() { context }: CreateCommentDto,
+  ): Promise<comment> {
+    return await this.commentsService.createComment(userId, boardId, context);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @Put(':commentId')
   async updateComment(
+    @User() userId: number,
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() { context }: UpdateCommentDto,
-  ): Promise<void> {
-    await this.commentsService.updateComment(commentId, context);
+  ): Promise<Prisma.BatchPayload> {
+    return await this.commentsService.updateComment(userId, commentId, context);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
