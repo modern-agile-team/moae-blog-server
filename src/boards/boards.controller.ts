@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -49,11 +48,13 @@ export class BoardsController {
     @Body() updateBoardDto: UpdateBoardDto,
     @User() userId: number,
   ): Promise<number> {
-    return await this.boardsService.update({
-      boardId,
-      userId,
+    return await this.boardsService.update(
+      {
+        boardId,
+        userId,
+      },
       updateBoardDto,
-    });
+    );
   }
 
   @HttpCode(HttpStatus.OK)
