@@ -1,10 +1,13 @@
-import { ApiProperty, IntersectionType } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { board as BoardModel } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class BoardsEntity extends PrismaService implements BoardModel {
+export class BoardsEntity
+  extends PickType(PrismaService, ['board'])
+  implements BoardModel
+{
   @ApiProperty({
     description: 'index',
     required: true,
