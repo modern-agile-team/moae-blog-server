@@ -75,12 +75,17 @@ export class CommentsRepository {
 
   /**
    * 한개의 댓글 delete문
+   * @param userId 삭제하려는 댓글 작성자
    * @param commentId 삭제할 댓글 고유 번호
    */
-  deleteComment(commentId: number): Promise<comment> {
-    return this.repository.comment.delete({
+  deleteComment(
+    userId: number,
+    commentId: number,
+  ): Promise<Prisma.BatchPayload> {
+    return this.repository.comment.deleteMany({
       where: {
         id: commentId,
+        userId,
       },
     });
   }

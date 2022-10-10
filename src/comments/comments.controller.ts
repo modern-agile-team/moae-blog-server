@@ -82,8 +82,10 @@ export class CommentsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':commentId')
   async deleteComment(
-    @Param('commentId', ParseIntPipe) commentId: number,
-  ): Promise<void> {
-    await this.commentsService.deleteComment(commentId);
+    @User() userId: number,
+    @Param('commentId', ParseIntPipe)
+    commentId: number,
+  ): Promise<Prisma.BatchPayload> {
+    return await this.commentsService.deleteComment(userId, commentId);
   }
 }
