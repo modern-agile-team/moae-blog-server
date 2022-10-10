@@ -4,10 +4,7 @@ import { CommentEntity } from '../entity/comment.entity';
 
 @Injectable()
 export class CommentsRepository {
-  private comment;
-  constructor(private readonly commentEntity: CommentEntity) {
-    this.comment = commentEntity.comment;
-  }
+  constructor(private readonly repository: CommentEntity) {}
   /**
    * 댓글 전체를 조회하는 select문
    * @param boardId 게시글 고유 번호
@@ -17,7 +14,7 @@ export class CommentsRepository {
     boardId: number,
     orderBy = 'asc' as Prisma.SortOrder,
   ): Promise<comment[]> {
-    return this.comment.findMany({
+    return this.repository.comment.findMany({
       where: {
         boardId,
       },
@@ -38,7 +35,7 @@ export class CommentsRepository {
     boardId: number,
     context: string,
   ): Promise<comment> {
-    return this.comment.create({
+    return this.repository.comment.create({
       data: {
         context,
         user: {
@@ -65,7 +62,7 @@ export class CommentsRepository {
     commentId: number,
     context: string,
   ): Promise<Prisma.BatchPayload> {
-    return this.comment.updateMany({
+    return this.repository.comment.updateMany({
       data: {
         context,
       },
@@ -81,7 +78,7 @@ export class CommentsRepository {
    * @param commentId 삭제할 댓글 고유 번호
    */
   deleteComment(commentId: number): Promise<comment> {
-    return this.comment.delete({
+    return this.repository.comment.delete({
       where: {
         id: commentId,
       },
