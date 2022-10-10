@@ -21,46 +21,48 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../common/decorators/user.decorator';
 
-@Controller('boards')
+@Controller('board')
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Get()
-  async selectAllBoards(
-    @Query() selectBoardDto: SelectBoardDto,
-  ): Promise<board[]> {
-    return await this.boardsService.selectAllBoards(selectBoardDto);
+  @Get('/all')
+  async getAll(@Query() selectBoardDto: SelectBoardDto): Promise<board[]> {
+    return await this.boardsService.getAll(selectBoardDto);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async createBoard(
+  async create(
     @Body() createBoardDto: CreateBoardDto,
     @User() userId: number,
   ): Promise<board> {
-    return await this.boardsService.createBoard(userId, createBoardDto);
+    return await this.boardsService.create(userId, createBoardDto);
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Patch(':boardId')
-  async updateBoard(
+  @HttpCode(HttpStatus.OK)
+  @Patch('/:boardId')
+  @UseGuards(AuthGuard('jwt'))
+  async update(
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() updateBoardDto: UpdateBoardDto,
-  ): Promise<void> {
-    if (Object.keys(updateBoardDto).length < 1) {
-      throw new BadRequestException('게시글 정보가 잘못되었습니다.');
-    }
-
-    await this.boardsService.updateBoard(boardId, updateBoardDto);
+    @User() userId: number,
+  ): Promise<number> {
+    return await this.boardsService.update({
+      boardId,
+      userId,
+      updateBoardDto,
+    });
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete(':boardId')
-  async deleteBoard(
+  @HttpCode(HttpStatus.OK)
+  @Delete('/:boardId')
+  @UseGuards(AuthGuard('jwt'))
+  async delete(
     @Param('boardId', ParseIntPipe) boardId: number,
-  ): Promise<void> {
-    await this.boardsService.deleteBoard(boardId);
+    @User() userId: number,
+  ): Promise<number> {
+    return await this.boardsService.delete({ boardId, userId });
   }
 }

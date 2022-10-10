@@ -2,54 +2,32 @@ import { BadGatewayException, Injectable } from '@nestjs/common';
 import { board } from '@prisma/client';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
-import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardsRepository } from './repository/boards.repository';
+import { UpdateInterface } from './interfaces/update.interface';
+import { DeleteInterface } from './interfaces/delete.interface';
 
 @Injectable()
 export class BoardsService {
   constructor(private readonly boardsRepository: BoardsRepository) {}
 
-  async selectAllBoards({
-    skip = 0,
-    ...selectOptions
-  }: SelectBoardDto): Promise<board[]> {
-    const PER_PAGE = 10;
-
-    return await this.boardsRepository.selectAllBoards({
-      skip: PER_PAGE * (Number(skip) > 0 ? Number(skip) - 1 : 0),
-      orderBy: { id: 'desc' },
-      ...selectOptions,
-    });
+  async getAll(selectBoardDto: SelectBoardDto): Promise<board[]> {
+    !selectBoardDto.orderBy
+      ? (selectBoardDto.orderBy = 'desc')
+      : selectBoardDto.orderBy;
+    return await this.boardsRepository.getAll(selectBoardDto);
   }
 
-  async createBoard(
-    userId: number,
-    createBoardDto: CreateBoardDto,
-  ): Promise<board> {
-    return await this.boardsRepository.createBoard(userId, createBoardDto);
+  async create(userId: number, createBoardDto: CreateBoardDto): Promise<board> {
+    return await this.boardsRepository.create(userId, createBoardDto);
   }
 
-  async updateBoard(
-    boardId: number,
-    updateBoardDto: UpdateBoardDto,
-  ): Promise<void> {
-    const updateResult: board = await this.boardsRepository.updateBoard(
-      boardId,
-      updateBoardDto,
-    );
-
-    if (!Object.keys(updateResult).length) {
-      throw new BadGatewayException('DB 수정 실패');
-    }
+  async update(essentialData: UpdateInterface): Promise<number> {
+    const result = await this.boardsRepository.update(essentialData);
+    return result.count;
   }
 
-  async deleteBoard(boardId: number): Promise<void> {
-    const deleteResult: board = await this.boardsRepository.deleteBoard(
-      boardId,
-    );
-
-    if (!Object.keys(deleteResult).length) {
-      throw new BadGatewayException('DB 삭제 실패');
-    }
+  async delete(essentialData: DeleteInterface): Promise<number> {
+    const result = await this.boardsRepository.delete(essentialData);
+    return result.count;
   }
 }

@@ -5,35 +5,26 @@ import { CreateBoardDto } from '../dto/create-board.dto';
 import { SelectBoardDto } from '../dto/select-board.dto';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 import { BoardsEntity } from '../boards.entity';
+import { UpdateInterface } from '../interfaces/update.interface';
+import { DeleteInterface } from '../interfaces/delete.interface';
 
 @Injectable()
 export class BoardsRepository {
-  private board;
-  constructor(private readonly boardEntity: BoardsEntity) {
-    this.board = boardEntity.board;
-  }
+  constructor(private readonly repository: BoardsEntity) {}
   /**
    * 게시글 전체를 조회하는 select문
-   * @param {skip, take, cursor, where, orderBy}
-   * param 순서에 맞게
-   * skip, take => Pagenation
-   * cursor => 범위 지정
-   * where => 조건
+   * @param {skip, take, orderBy}
+   * skip: 표시할 첫번째 페이지
+   * take: 표시할 마지막 페이지
    * orderBy => 정렬
    */
-  async selectAllBoards({
-    skip = 1,
-    take = 10,
-    cursor,
-    where,
-    orderBy,
-  }: SelectBoardDto): Promise<board[]> {
-    return this.board.findMany({
+  async getAll({ skip, take, orderBy }: SelectBoardDto): Promise<board[]> {
+    return this.repository.board.findMany({
       skip,
       take,
-      cursor,
-      where,
-      orderBy,
+      orderBy: {
+        id: orderBy,
+      },
     });
   }
 
@@ -42,7 +33,7 @@ export class BoardsRepository {
    * @param boardId
    */
   async selectOneBoard(boardId: Prisma.boardWhereUniqueInput) {
-    return this.board.findUnique({
+    return this.repository.board.findUnique({
       where: boardId,
     });
   }
@@ -52,25 +43,21 @@ export class BoardsRepository {
    * @CurrentUser userId - 작성자
    * @Body createBoardDto { title, userId, context }
    */
-  async createBoard(
+  async create(
     userId: number,
     { title, context }: CreateBoardDto,
   ): Promise<board> {
-    try {
-      return await this.board.create({
-        data: {
-          title,
-          context,
-          user: {
-            connect: {
-              id: userId,
-            },
+    return await this.repository.board.create({
+      data: {
+        title,
+        context,
+        user: {
+          connect: {
+            id: userId,
           },
         },
-      });
-    } catch (err) {
-      throw new InternalServerErrorException(`서버 에러입니다`);
-    }
+      },
+    });
   }
 
   /**
@@ -78,14 +65,12 @@ export class BoardsRepository {
    * @param boardId 게시글의 고유번호
    * @param updateBoardDto 게시글의 바뀐 정보
    */
-  async updateBoard(
-    boardId: number,
-    updateBoardDto: UpdateBoardDto,
-  ): Promise<board> {
-    return this.board.update({
-      data: updateBoardDto,
+  async update(essentialData: UpdateInterface): Promise<Prisma.BatchPayload> {
+    return this.repository.board.updateMany({
+      data: essentialData.updateBoardDto,
       where: {
-        id: boardId,
+        id: essentialData.boardId,
+        userId: essentialData.userId,
       },
     });
   }
@@ -94,10 +79,11 @@ export class BoardsRepository {
    * 한개의 게시글 delete문
    * @param boardId 삭제할 게시글 고유번호
    */
-  async deleteBoard(boardId: number): Promise<board> {
-    return this.board.delete({
+  async delete(essentialData: DeleteInterface): Promise<Prisma.BatchPayload> {
+    return this.repository.board.deleteMany({
       where: {
-        id: boardId,
+        id: essentialData.boardId,
+        userId: essentialData.userId,
       },
     });
   }
