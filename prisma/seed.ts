@@ -1,0 +1,56 @@
+// prisma/seed.ts
+
+import { PrismaClient, user } from '@prisma/client';
+import { faker } from '@faker-js/faker';
+
+// initialize Prisma Client
+const prisma = new PrismaClient();
+
+async function main() {
+  await makeFakeUser(100, 5); // 유저 인원, 게시글 개수
+}
+
+const makeFakeUser = async (
+  userCnt: number,
+  boardCnt: number,
+): Promise<void> => {
+  for (let i = 0; i < userCnt; i += 1) {
+    const user: user = await prisma.user.create({
+      data: {
+        email: faker.internet.email(),
+        name: faker.name.fullName(),
+        baseUrl: 'default.jpg',
+        authCode: Number(faker.datatype.boolean()),
+      },
+    });
+
+    await makeFakeBoard(boardCnt, user.id);
+  }
+};
+
+const makeFakeBoard = async (count: number, userId: number): Promise<void> => {
+  for (let i = 0; i < count; i += 1) {
+    await prisma.board.create({
+      data: {
+        title: faker.random.words(3),
+        context: faker.random.words(10),
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+  }
+};
+
+// execute the main function
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    // close Prisma Client at the end
+    await prisma.$disconnect();
+  });

@@ -1,11 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { comment as CommentModel } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 @Injectable()
-export class CommentEntity extends PrismaService implements CommentModel {
+export class CommentEntity
+  extends PickType(PrismaService, ['comment'] as const)
+  implements CommentModel
+{
   @ApiProperty({
     description: 'index',
     required: true,

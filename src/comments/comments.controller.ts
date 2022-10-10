@@ -31,10 +31,10 @@ export class CommentsController {
   })
   @HttpCode(HttpStatus.OK)
   @Get('all')
-  async selectAllComments(
+  async getAll(
     @Param('boardId', ParseIntPipe) boardId: number,
   ): Promise<comment[]> {
-    return await this.commentsService.selectAllComments(boardId);
+    return await this.commentsService.getAll(boardId);
   }
 
   @ApiOperation({
@@ -48,12 +48,12 @@ export class CommentsController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createComment(
+  async create(
     @User() userId: number,
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<comment> {
-    return await this.commentsService.createComment(userId, boardId, context);
+    return await this.commentsService.create(userId, boardId, context);
   }
 
   @ApiOperation({
@@ -67,23 +67,25 @@ export class CommentsController {
   })
   @HttpCode(HttpStatus.OK)
   @Put(':commentId')
-  async updateComment(
+  async update(
     @User() userId: number,
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentsService.updateComment(userId, commentId, context);
+    return await this.commentsService.update(userId, commentId, context);
   }
 
   @ApiOperation({
     summary: '한 개의 댓글 삭제',
     description: '한개 댓글을 삭제합니다.',
   })
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @Delete(':commentId')
-  async deleteComment(
-    @Param('commentId', ParseIntPipe) commentId: number,
-  ): Promise<void> {
-    await this.commentsService.deleteComment(commentId);
+  async delete(
+    @User() userId: number,
+    @Param('commentId', ParseIntPipe)
+    commentId: number,
+  ): Promise<Prisma.BatchPayload> {
+    return await this.commentsService.delete(userId, commentId);
   }
 }

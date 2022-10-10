@@ -4,20 +4,17 @@ import { CommentEntity } from '../entity/comment.entity';
 
 @Injectable()
 export class CommentsRepository {
-  private comment;
-  constructor(private readonly commentEntity: CommentEntity) {
-    this.comment = commentEntity.comment;
-  }
+  constructor(private readonly repository: CommentEntity) {}
   /**
    * 댓글 전체를 조회하는 select문
    * @param boardId 게시글 고유 번호
    * @param orderBy 정렬
    */
-  selectAllComment(
+  getAll(
     boardId: number,
     orderBy = 'asc' as Prisma.SortOrder,
   ): Promise<comment[]> {
-    return this.comment.findMany({
+    return this.repository.comment.findMany({
       where: {
         boardId,
       },
@@ -33,12 +30,8 @@ export class CommentsRepository {
    * @param boardId 댓글을 생성하려는 게시글 고유 번호
    * @param context 댓글 내용
    */
-  createComment(
-    userId: number,
-    boardId: number,
-    context: string,
-  ): Promise<comment> {
-    return this.comment.create({
+  create(userId: number, boardId: number, context: string): Promise<comment> {
+    return this.repository.comment.create({
       data: {
         context,
         user: {
@@ -60,12 +53,12 @@ export class CommentsRepository {
    * @param commentId 댓글 고유 번호
    * @param context 수정된 댓글 내용
    */
-  updateComment(
+  update(
     userId: number,
     commentId: number,
     context: string,
   ): Promise<Prisma.BatchPayload> {
-    return this.comment.updateMany({
+    return this.repository.comment.updateMany({
       data: {
         context,
       },
@@ -78,12 +71,14 @@ export class CommentsRepository {
 
   /**
    * 한개의 댓글 delete문
+   * @param userId 삭제하려는 댓글 작성자
    * @param commentId 삭제할 댓글 고유 번호
    */
-  deleteComment(commentId: number): Promise<comment> {
-    return this.comment.delete({
+  delete(userId: number, commentId: number): Promise<Prisma.BatchPayload> {
+    return this.repository.comment.deleteMany({
       where: {
         id: commentId,
+        userId,
       },
     });
   }
