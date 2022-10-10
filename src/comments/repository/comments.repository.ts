@@ -1,7 +1,6 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { comment, Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CreateCommentDto } from '../dto/create-comment.dto';
 
 @Injectable()
 export class CommentsRepository extends PrismaService {
@@ -14,18 +13,14 @@ export class CommentsRepository extends PrismaService {
     boardId: number,
     orderBy = 'asc' as Prisma.SortOrder,
   ): Promise<comment[]> {
-    try {
-      return this.comment.findMany({
-        where: {
-          boardId,
-        },
-        orderBy: {
-          id: orderBy,
-        },
-      });
-    } catch {
-      throw new InternalServerErrorException('알 수 없는 서버 에러입니다.');
-    }
+    return this.comment.findMany({
+      where: {
+        boardId,
+      },
+      orderBy: {
+        id: orderBy,
+      },
+    });
   }
 
   /**
@@ -40,32 +35,30 @@ export class CommentsRepository extends PrismaService {
 
   /**
    * 새로운 댓글 생성 create문
+   * @param userId 로그인한 유저의 고유번호
    * @param boardId 댓글을 생성하려는 게시글 고유 번호
-   * @param data { userId, context }
+   * @param context 댓글 내용
    */
   createComment(
+    userId: number,
     boardId: number,
-    { userId, context }: CreateCommentDto,
+    context: string,
   ): Promise<comment> {
-    try {
-      return this.comment.create({
-        data: {
-          context,
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
-          board: {
-            connect: {
-              id: boardId,
-            },
+    return this.comment.create({
+      data: {
+        context,
+        user: {
+          connect: {
+            id: userId,
           },
         },
-      });
-    } catch {
-      throw new InternalServerErrorException('알 수 없는 서버 에러입니다.');
-    }
+        board: {
+          connect: {
+            id: boardId,
+          },
+        },
+      },
+    });
   }
 
   /**
@@ -73,19 +66,20 @@ export class CommentsRepository extends PrismaService {
    * @param commentId 댓글 고유 번호
    * @param context 수정된 댓글 내용
    */
-  updateComment(commentId: number, context: string): Promise<comment> {
-    try {
-      return this.comment.update({
-        data: {
-          context,
-        },
-        where: {
-          id: commentId,
-        },
-      });
-    } catch {
-      throw new InternalServerErrorException('알 수 없는 서버 에러입니다.');
-    }
+  updateComment(
+    userId: number,
+    commentId: number,
+    context: string,
+  ): Promise<Prisma.BatchPayload> {
+    return this.comment.updateMany({
+      data: {
+        context,
+      },
+      where: {
+        id: commentId,
+        userId,
+      },
+    });
   }
 
   /**
