@@ -1,12 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { board, Prisma } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
 import { CreateBoardDto } from '../dto/create-board.dto';
 import { SelectBoardDto } from '../dto/select-board.dto';
-import { UpdateBoardDto } from '../dto/update-board.dto';
 import { BoardsEntity } from '../boards.entity';
-import { UpdateInterface } from '../interfaces/update.interface';
-import { DeleteInterface } from '../interfaces/delete.interface';
+import { BoardUserType } from '../../common/interfaces/index.interface';
+import { UpdateBoardDto } from '../dto/update-board.dto';
 
 @Injectable()
 export class BoardsRepository {
@@ -65,9 +63,12 @@ export class BoardsRepository {
    * @param boardId 게시글의 고유번호
    * @param updateBoardDto 게시글의 바뀐 정보
    */
-  async update(essentialData: UpdateInterface): Promise<Prisma.BatchPayload> {
+  async update(
+    essentialData: BoardUserType,
+    updateBoardDto: UpdateBoardDto,
+  ): Promise<Prisma.BatchPayload> {
     return this.repository.board.updateMany({
-      data: essentialData.updateBoardDto,
+      data: updateBoardDto,
       where: {
         id: essentialData.boardId,
         userId: essentialData.userId,
@@ -79,7 +80,7 @@ export class BoardsRepository {
    * 한개의 게시글 delete문
    * @param boardId 삭제할 게시글 고유번호
    */
-  async delete(essentialData: DeleteInterface): Promise<Prisma.BatchPayload> {
+  async delete(essentialData: BoardUserType): Promise<Prisma.BatchPayload> {
     return this.repository.board.deleteMany({
       where: {
         id: essentialData.boardId,
