@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { BoardModule } from './board/board.module';
-import { CommentsModule } from './comments/comments.module';
+import { commentModule } from './comment/comment.module';
 import { LikesModule } from './likes/likes.module';
 import { ImagesModule } from './images/images.module';
 import { AuthModule } from './auth/auth.module';
@@ -16,7 +16,7 @@ import { RedisConfigService } from './cache/cache.config';
     ConfigModule.forRoot({ isGlobal: true }),
     UsersModule,
     BoardModule,
-    CommentsModule,
+    commentModule,
     LikesModule,
     ImagesModule,
     AuthModule,

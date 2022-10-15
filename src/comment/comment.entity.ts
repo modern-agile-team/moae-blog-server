@@ -1,6 +1,6 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { comment as CommentModel } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { IsNotEmpty, IsString, Length } from 'class-validator';
 

@@ -15,15 +15,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { comment, Prisma } from '@prisma/client';
 import { User } from 'src/common/decorators/user.decorator';
-import { CommentsService } from './comments.service';
+import { CommentService } from './comment.service';
 import { CreateOrUpdateCommentDto } from './dto/create-or-update-comment.dto';
 
 @ApiTags('Comment API')
 @ApiBearerAuth('accessToken')
 @UseGuards(AuthGuard('jwt'))
 @Controller('board/:boardId/comment')
-export class CommentsController {
-  constructor(private readonly commentsService: CommentsService) {}
+export class CommentController {
+  constructor(private readonly commentService: CommentService) {}
 
   @ApiOperation({
     summary: '한개 게시글의 모든 댓글 조회',
@@ -34,7 +34,7 @@ export class CommentsController {
   async getAll(
     @Param('boardId', ParseIntPipe) boardId: number,
   ): Promise<comment[]> {
-    return await this.commentsService.getAll(boardId);
+    return await this.commentService.getAll(boardId);
   }
 
   @ApiOperation({
@@ -53,7 +53,7 @@ export class CommentsController {
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<comment> {
-    return await this.commentsService.create(userId, boardId, context);
+    return await this.commentService.create(userId, boardId, context);
   }
 
   @ApiOperation({
@@ -72,7 +72,7 @@ export class CommentsController {
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentsService.update(userId, commentId, context);
+    return await this.commentService.update(userId, commentId, context);
   }
 
   @ApiOperation({
@@ -86,6 +86,6 @@ export class CommentsController {
     @Param('commentId', ParseIntPipe)
     commentId: number,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentsService.delete(userId, commentId);
+    return await this.commentService.delete(userId, commentId);
   }
 }
