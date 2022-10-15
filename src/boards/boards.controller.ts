@@ -19,17 +19,26 @@ import { SelectBoardDto } from './dto/select-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../common/decorators/user.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  GetAllBoardSwagger,
+  PatchBoardSwagger,
+  PostBoardSwagger,
+} from '../common/decorators/compose-swagger.decorator';
 
+@ApiTags('board API')
 @Controller('board')
 export class BoardsController {
   constructor(private readonly boardsService: BoardsService) {}
 
+  @GetAllBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Get('/all')
   async getAll(@Query() selectBoardDto: SelectBoardDto): Promise<board[]> {
     return await this.boardsService.getAll(selectBoardDto);
   }
 
+  @PostBoardSwagger()
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -40,6 +49,7 @@ export class BoardsController {
     return await this.boardsService.create(userId, createBoardDto);
   }
 
+  @PatchBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Patch('/:boardId')
   @UseGuards(AuthGuard('jwt'))
