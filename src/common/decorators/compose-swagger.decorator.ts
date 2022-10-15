@@ -6,10 +6,10 @@ import {
   ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
-import { SelectBoardDto } from '../../boards/dto/select-board.dto';
-import { BoardsEntity } from '../../boards/boards.entity';
-import { CreateBoardDto } from '../../boards/dto/create-board.dto';
-import { UpdateBoardDto } from '../../boards/dto/update-board.dto';
+import { SelectBoardDto } from '../../board/dto/select-board.dto';
+import { BoardEntity } from '../../board/board.entity';
+import { CreateBoardDto } from '../../board/dto/create-board.dto';
+import { UpdateBoardDto } from '../../board/dto/update-board.dto';
 
 export function GetAllBoardSwagger() {
   return applyDecorators(
@@ -23,7 +23,7 @@ export function GetAllBoardSwagger() {
     ApiResponse({
       status: 200,
       description: 'success',
-      type: BoardsEntity,
+      type: BoardEntity,
       isArray: true,
     }),
   );
@@ -39,7 +39,7 @@ export function PostBoardSwagger() {
     }),
     ApiCreatedResponse({
       description: 'success',
-      type: BoardsEntity,
+      type: BoardEntity,
       isArray: true,
     }),
   );

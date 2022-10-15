@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { board, Prisma } from '@prisma/client';
 import { CreateBoardDto } from '../dto/create-board.dto';
 import { SelectBoardDto } from '../dto/select-board.dto';
-import { BoardsEntity } from '../boards.entity';
+import { BoardEntity } from '../board.entity';
 import { BoardUserType } from '../../common/interfaces/index.interface';
 import { UpdateBoardDto } from '../dto/update-board.dto';
 
 @Injectable()
-export class BoardsRepository {
-  constructor(private readonly repository: BoardsEntity) {}
+export class BoardRepository {
+  constructor(private readonly repository: BoardEntity) {}
   /**
    * 게시글 전체를 조회하는 select문
    * @param {skip, take, orderBy}

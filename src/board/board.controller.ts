@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { board } from '@prisma/client';
-import { BoardsService } from './boards.service';
+import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
@@ -28,8 +28,8 @@ import {
 
 @ApiTags('board API')
 @Controller('board')
-export class BoardsController {
-  constructor(private readonly boardsService: BoardsService) {}
+export class BoardController {
+  constructor(private readonly boardsService: BoardService) {}
 
   @GetAllBoardSwagger()
   @HttpCode(HttpStatus.OK)

@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { board } from '@prisma/client';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
-import { BoardsRepository } from './repository/boards.repository';
+import { BoardRepository } from './repository/board.repository';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardUserType } from '../common/interfaces/index.interface';
 
 @Injectable()
-export class BoardsService {
-  constructor(private readonly boardsRepository: BoardsRepository) {}
+export class BoardService {
+  constructor(private readonly boardsRepository: BoardRepository) {}
 
   async getAll(selectBoardDto: SelectBoardDto): Promise<board[]> {
     !selectBoardDto.orderBy

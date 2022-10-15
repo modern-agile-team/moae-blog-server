@@ -4,7 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class BoardsEntity
+export class BoardEntity
   extends PickType(PrismaService, ['board'])
   implements BoardModel
 {
