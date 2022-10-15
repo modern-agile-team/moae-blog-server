@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -14,23 +13,32 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { board } from '@prisma/client';
-import { BoardsService } from './boards.service';
+import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../common/decorators/user.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  GetAllBoardSwagger,
+  PatchBoardSwagger,
+  PostBoardSwagger,
+} from '../common/decorators/compose-swagger.decorator';
 
+@ApiTags('board API')
 @Controller('board')
-export class BoardsController {
-  constructor(private readonly boardsService: BoardsService) {}
+export class BoardController {
+  constructor(private readonly boardsService: BoardService) {}
 
+  @GetAllBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Get('/all')
   async getAll(@Query() selectBoardDto: SelectBoardDto): Promise<board[]> {
     return await this.boardsService.getAll(selectBoardDto);
   }
 
+  @PostBoardSwagger()
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -41,6 +49,7 @@ export class BoardsController {
     return await this.boardsService.create(userId, createBoardDto);
   }
 
+  @PatchBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Patch('/:boardId')
   @UseGuards(AuthGuard('jwt'))
@@ -49,11 +58,13 @@ export class BoardsController {
     @Body() updateBoardDto: UpdateBoardDto,
     @User() userId: number,
   ): Promise<number> {
-    return await this.boardsService.update({
-      boardId,
-      userId,
+    return await this.boardsService.update(
+      {
+        boardId,
+        userId,
+      },
       updateBoardDto,
-    });
+    );
   }
 
   @HttpCode(HttpStatus.OK)

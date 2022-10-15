@@ -1,21 +1,19 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { board, Prisma } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
 import { CreateBoardDto } from '../dto/create-board.dto';
 import { SelectBoardDto } from '../dto/select-board.dto';
+import { BoardEntity } from '../board.entity';
+import { BoardUserType } from '../../common/interfaces/index.interface';
 import { UpdateBoardDto } from '../dto/update-board.dto';
-import { BoardsEntity } from '../boards.entity';
-import { UpdateInterface } from '../interfaces/update.interface';
-import { DeleteInterface } from '../interfaces/delete.interface';
 
 @Injectable()
-export class BoardsRepository {
-  constructor(private readonly repository: BoardsEntity) {}
+export class BoardRepository {
+  constructor(private readonly repository: BoardEntity) {}
   /**
    * 게시글 전체를 조회하는 select문
    * @param {skip, take, orderBy}
-   * skip: 표시할 첫번째 페이지
-   * take: 표시할 마지막 페이지
+   * skip: 생략할 페이지 수
+   * take: 표시할 페이지 수
    * orderBy => 정렬
    */
   async getAll({ skip, take, orderBy }: SelectBoardDto): Promise<board[]> {
@@ -62,12 +60,15 @@ export class BoardsRepository {
 
   /**
    * 한개의 게시글 정보 update문
-   * @param boardId 게시글의 고유번호
+   * @param essentialData 삭제하는 유저 인덱스값 & 게시글의 고유번호
    * @param updateBoardDto 게시글의 바뀐 정보
    */
-  async update(essentialData: UpdateInterface): Promise<Prisma.BatchPayload> {
+  async update(
+    essentialData: BoardUserType,
+    updateBoardDto: UpdateBoardDto,
+  ): Promise<Prisma.BatchPayload> {
     return this.repository.board.updateMany({
-      data: essentialData.updateBoardDto,
+      data: updateBoardDto,
       where: {
         id: essentialData.boardId,
         userId: essentialData.userId,
@@ -77,9 +78,9 @@ export class BoardsRepository {
 
   /**
    * 한개의 게시글 delete문
-   * @param boardId 삭제할 게시글 고유번호
+   * @param essentialData 삭제하는 유저 인덱스값 & 게시글의 고유번호
    */
-  async delete(essentialData: DeleteInterface): Promise<Prisma.BatchPayload> {
+  async delete(essentialData: BoardUserType): Promise<Prisma.BatchPayload> {
     return this.repository.board.deleteMany({
       where: {
         id: essentialData.boardId,

@@ -1,14 +1,14 @@
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { board } from '@prisma/client';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
-import { BoardsRepository } from './repository/boards.repository';
-import { UpdateInterface } from './interfaces/update.interface';
-import { DeleteInterface } from './interfaces/delete.interface';
+import { BoardRepository } from './repository/board.repository';
+import { UpdateBoardDto } from './dto/update-board.dto';
+import { BoardUserType } from '../common/interfaces/index.interface';
 
 @Injectable()
-export class BoardsService {
-  constructor(private readonly boardsRepository: BoardsRepository) {}
+export class BoardService {
+  constructor(private readonly boardsRepository: BoardRepository) {}
 
   async getAll(selectBoardDto: SelectBoardDto): Promise<board[]> {
     !selectBoardDto.orderBy
@@ -21,12 +21,18 @@ export class BoardsService {
     return await this.boardsRepository.create(userId, createBoardDto);
   }
 
-  async update(essentialData: UpdateInterface): Promise<number> {
-    const result = await this.boardsRepository.update(essentialData);
+  async update(
+    essentialData: BoardUserType,
+    updateBoardDto: UpdateBoardDto,
+  ): Promise<number> {
+    const result = await this.boardsRepository.update(
+      essentialData,
+      updateBoardDto,
+    );
     return result.count;
   }
 
-  async delete(essentialData: DeleteInterface): Promise<number> {
+  async delete(essentialData: BoardUserType): Promise<number> {
     const result = await this.boardsRepository.delete(essentialData);
     return result.count;
   }

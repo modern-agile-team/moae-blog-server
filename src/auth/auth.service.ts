@@ -33,14 +33,14 @@ export class AuthService {
 
   async setAccessToken(payload: JwtPayload) {
     return this.jwtService.sign(payload, {
-      expiresIn: '1d',
+      expiresIn: '7d',
       secret: this.configService.get('JWT_SECRET'),
     });
   }
 
   async setRefreshToken(payload: JwtPayload) {
     return this.jwtService.sign(payload, {
-      expiresIn: '7d',
+      expiresIn: '6w',
       secret: this.configService.get('REFRESH_SECRET'),
     });
   }

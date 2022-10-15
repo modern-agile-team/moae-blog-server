@@ -4,14 +4,13 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class BoardsEntity
+export class BoardEntity
   extends PickType(PrismaService, ['board'])
   implements BoardModel
 {
   @ApiProperty({
     description: 'index',
     required: true,
-    default: false,
   })
   id: number;
 
@@ -36,7 +35,7 @@ export class BoardsEntity
   @ApiProperty({
     description: '생성 시간',
     required: true,
-    default: Date.now(),
+    default: new Date(Date.now()),
   })
   createdAt: Date;
 
