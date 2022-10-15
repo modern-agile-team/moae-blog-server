@@ -8,4 +8,4 @@ import { CommentEntity } from './comment.entity';
   controllers: [CommentController],
   providers: [CommentService, CommentRepository, CommentEntity],
 })
-export class commentModule {}
+export class CommentModule {}
