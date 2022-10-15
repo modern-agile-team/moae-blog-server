@@ -11,7 +11,6 @@ export class BoardsEntity
   @ApiProperty({
     description: 'index',
     required: true,
-    default: false,
   })
   id: number;
 
@@ -36,7 +35,7 @@ export class BoardsEntity
   @ApiProperty({
     description: '생성 시간',
     required: true,
-    default: Date.now(),
+    default: new Date(Date.now()),
   })
   createdAt: Date;
 
