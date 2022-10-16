@@ -10,8 +10,8 @@ import { Response } from 'express';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Prisma } from '@prisma/client';
 
-@Catch(Prisma.PrismaClientKnownRequestError)
-export class PrismaKnownFilter implements ExceptionFilter {
+@Catch(Prisma.PrismaClientUnknownRequestError)
+export class PrismaUnKnownFilter implements ExceptionFilter {
   constructor(private readonly logger: Logger) {}
 
   catch(exception: HttpException, host: ArgumentsHost): void {

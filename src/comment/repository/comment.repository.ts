@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { comment, Prisma } from '@prisma/client';
-import { CommentEntity } from '../entity/comment.entity';
+import { CommentEntity } from '../comment.entity';
 
 @Injectable()
-export class CommentsRepository {
+export class CommentRepository {
   constructor(private readonly repository: CommentEntity) {}
   /**
    * 댓글 전체를 조회하는 select문

@@ -5,13 +5,13 @@ import {
   HttpException,
   Logger,
   HttpStatus,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { Prisma } from '@prisma/client';
 
-@Catch(Prisma.PrismaClientKnownRequestError)
-export class PrismaKnownFilter implements ExceptionFilter {
+@Catch(ForbiddenException)
+export class HttpForbiddenFilter implements ExceptionFilter {
   constructor(private readonly logger: Logger) {}
 
   catch(exception: HttpException, host: ArgumentsHost): void {
@@ -20,8 +20,6 @@ export class PrismaKnownFilter implements ExceptionFilter {
 
     this.logger.error(exception);
 
-    response
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json({ message: '서버 에러입니다.' });
+    response.status(HttpStatus.FORBIDDEN).json(exception.getResponse());
   }
 }

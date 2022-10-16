@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { comment, Prisma } from '@prisma/client';
-import { CommentsRepository } from './repository/comments.repository';
+import { CommentRepository } from './repository/comment.repository';
 
 @Injectable()
-export class CommentsService {
-  constructor(private readonly commentsRepository: CommentsRepository) {}
+export class CommentService {
+  constructor(private readonly commentRepository: CommentRepository) {}
 
   async getAll(boardId: number): Promise<comment[]> {
-    return await this.commentsRepository.getAll(boardId);
+    return await this.commentRepository.getAll(boardId);
   }
 
   async create(
@@ -15,7 +15,7 @@ export class CommentsService {
     boardId: number,
     context: string,
   ): Promise<comment> {
-    return await this.commentsRepository.create(userId, boardId, context);
+    return await this.commentRepository.create(userId, boardId, context);
   }
 
   async update(
@@ -23,13 +23,13 @@ export class CommentsService {
     commentId: number,
     context: string,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentsRepository.update(userId, commentId, context);
+    return await this.commentRepository.update(userId, commentId, context);
   }
 
   async delete(
     userId: number,
     commentId: number,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentsRepository.delete(userId, commentId);
+    return await this.commentRepository.delete(userId, commentId);
   }
 }

@@ -5,13 +5,13 @@ import {
   HttpException,
   Logger,
   HttpStatus,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
-import { Prisma } from '@prisma/client';
 
-@Catch(Prisma.PrismaClientKnownRequestError)
-export class PrismaKnownFilter implements ExceptionFilter {
+@Catch(InternalServerErrorException)
+export class HttpInternalServerErrorFilter implements ExceptionFilter {
   constructor(private readonly logger: Logger) {}
 
   catch(exception: HttpException, host: ArgumentsHost): void {
@@ -22,6 +22,6 @@ export class PrismaKnownFilter implements ExceptionFilter {
 
     response
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json({ message: '서버 에러입니다.' });
+      .json(exception.getResponse());
   }
 }
