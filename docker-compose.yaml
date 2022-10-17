@@ -4,11 +4,12 @@ services:
   redis:
     container_name: redis
     image: redis:latest
-    hostname: redis
-    command: ['redis-server', '—bind', 'redis', '—port', '6379']
+    hostname: 127.0.0.1
     ports:
-      - 6379:6379
+      - "6379:6379"
     restart: always
+    command: redis-server
+
 
   moae-blog:
     depends_on:
