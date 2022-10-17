@@ -1,0 +1,26 @@
+version: '3.7'
+# DevelopMent
+services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    hostname: redis
+    command: ['redis-server', '—bind', 'redis', '—port', '6379']
+    ports:
+      - 6379:6379
+    restart: always
+
+  moae-blog:
+    depends_on:
+      - redis
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - 8080:8080
+    image: moae-blog
+    container_name: moae-blog
+    env_file:
+      - ./.env
+    environment:
+      - TZ=Asia/Seoul
