@@ -21,6 +21,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from '../common/decorators/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import {
+  DeleteBoardSwagger,
   GetAllBoardSwagger,
   PatchBoardSwagger,
   PostBoardSwagger,
@@ -67,6 +68,7 @@ export class BoardController {
     );
   }
 
+  @DeleteBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Delete('/:boardId')
   @UseGuards(AuthGuard('jwt'))
