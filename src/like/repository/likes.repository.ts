@@ -5,37 +5,21 @@ import { PrismaService } from '../../prisma/prisma.service';
 @Injectable()
 export class LikesRepository extends PrismaService {
   /**
-   * 좋아요 전체를 조회하는 select문
-   * @param skip
-   * @param take
-   * @param cursor
+   * 게시물에 대한 좋아요 검색
    * @param where
-   * @param orderBy
    */
-  async selectAllLike({
-    skip = 1,
-    take = 1,
-    cursor,
+  async selectAllLikeByBoardId({
     where,
-    orderBy,
   }: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.like_relWhereUniqueInput;
     where?: Prisma.like_relWhereInput;
-    orderBy?: Prisma.like_relOrderByWithRelationInput;
   }) {
     return this.like_rel.findMany({
-      skip,
-      take,
-      cursor,
       where,
-      orderBy,
     });
   }
 
   /**
-   * 한개의 좋아요 select문
+   * 특정 사용자가 좋아요를 눌렀는지 확인
    * @param likeId
    */
   async selectOneLike(likeId: Prisma.like_relWhereUniqueInput) {
@@ -51,21 +35,6 @@ export class LikesRepository extends PrismaService {
   async createLike(data: Prisma.like_relCreateInput): Promise<like_rel> {
     return this.like_rel.create({
       data,
-    });
-  }
-
-  /**
-   * 한개의 좋아요 정보 update문
-   * @param params { where, data }
-   */
-  async updateLike(params: {
-    where: Prisma.like_relWhereUniqueInput;
-    data: Prisma.like_relUpdateInput;
-  }): Promise<like_rel> {
-    const { where, data } = params;
-    return this.like_rel.update({
-      data,
-      where,
     });
   }
 
