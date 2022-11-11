@@ -1,50 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { like_rel, Prisma } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { like_rel } from '@prisma/client';
+import { LikeEntity } from '../like.entity';
+import { GetCountDto } from '../dto/get-count.dto';
+import { RequestLikeDto } from '../dto/request-like.dto';
 
 @Injectable()
-export class LikesRepository extends PrismaService {
+export class LikesRepository {
+  constructor(private readonly repository: LikeEntity) {}
   /**
    * 게시물에 대한 좋아요 검색
-   * @param where
+   * @param data {boardId}
    */
-  async selectAllLikeByBoardId({
-    where,
-  }: {
-    where?: Prisma.like_relWhereInput;
-  }) {
-    return this.like_rel.findMany({
-      where,
+  async getCountByBoardId(data: GetCountDto): Promise<number> {
+    return this.repository.like_rel.count({
+      where: data,
     });
   }
 
   /**
    * 특정 사용자가 좋아요를 눌렀는지 확인
-   * @param likeId
+   * @param data {userId, boardId}
    */
-  async selectOneLike(likeId: Prisma.like_relWhereUniqueInput) {
-    return this.like_rel.findUnique({
-      where: likeId,
+  async getOneLike(data: RequestLikeDto) {
+    return this.repository.like_rel.findFirst({
+      where: data,
     });
   }
 
   /**
    * 새로운 좋아요 생성 create문
-   * @param data { userId, boardId, count }
+   * @param data {userId, boardId}
    */
-  async createLike(data: Prisma.like_relCreateInput): Promise<like_rel> {
-    return this.like_rel.create({
+  async createLike(data: RequestLikeDto): Promise<like_rel> {
+    return this.repository.like_rel.create({
       data,
     });
   }
 
   /**
    * 한개의 좋아요 delete문
-   * @param where
+   * @param data {userId, boardId}
    */
-  async deleteLike(where: Prisma.like_relWhereUniqueInput): Promise<like_rel> {
-    return this.like_rel.delete({
-      where,
+  async deleteLike(data: RequestLikeDto): Promise<like_rel> {
+    return this.repository.like_rel.delete({
+      where: {
+        userId_boardId: data,
+      },
     });
   }
 }

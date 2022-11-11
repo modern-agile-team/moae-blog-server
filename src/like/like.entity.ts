@@ -8,6 +8,7 @@ export class LikeEntity
   extends PickType(PrismaService, ['like_rel'])
   implements LikeModel
 {
+  count: number;
   @ApiProperty({
     description: 'index',
     required: true,
@@ -25,12 +26,6 @@ export class LikeEntity
     required: true,
   })
   boardId: number;
-
-  @ApiProperty({
-    description: 'board like count',
-    required: true,
-  })
-  count: number;
 
   @ApiProperty({
     description: '생성 시간',
