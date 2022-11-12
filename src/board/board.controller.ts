@@ -12,7 +12,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { board } from '@prisma/client';
+import { board, category } from '@prisma/client';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
@@ -25,11 +25,17 @@ import {
   PatchBoardSwagger,
   PostBoardSwagger,
 } from '../common/decorators/compose-swagger.decorator';
+import { CategoryService } from 'src/category/category.service';
+import { CategoryOnBoardService } from 'src/category-on-board/category-on-board.service';
 
 @ApiTags('board API')
 @Controller('board')
 export class BoardController {
-  constructor(private readonly boardsService: BoardService) {}
+  constructor(
+    private readonly boardsService: BoardService,
+    private readonly categoryService: CategoryService,
+    private readonly categoryOnBoardService: CategoryOnBoardService,
+  ) {}
 
   @GetAllBoardSwagger()
   @HttpCode(HttpStatus.OK)
@@ -45,8 +51,17 @@ export class BoardController {
   async create(
     @Body() createBoardDto: CreateBoardDto,
     @User() userId: number,
-  ): Promise<board> {
-    return await this.boardsService.create(userId, createBoardDto);
+  ): Promise<any> {
+    const categories: category[] = await this.categoryService.create(
+      createBoardDto.categories,
+    );
+    const board: board = await this.boardsService.create(
+      userId,
+      createBoardDto,
+    );
+    await this.categoryOnBoardService.create(categories, board.id);
+
+    return board;
   }
 
   @PatchBoardSwagger()

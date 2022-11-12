@@ -9,6 +9,8 @@ import { ImagesModule } from './images/images.module';
 import { AuthModule } from './auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { RedisConfigService } from './cache/cache.config';
+import { CategoryModule } from './category/category.module';
+import { CategoryOnBoardModule } from './category-on-board/category-on-board.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { RedisConfigService } from './cache/cache.config';
       useClass: RedisConfigService,
       inject: [ConfigService],
     }),
+    CategoryModule,
+    CategoryOnBoardModule,
   ],
 })
 export class AppModule {}
