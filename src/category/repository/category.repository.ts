@@ -6,6 +6,14 @@ import { CategoryEntity } from '../category.entity';
 export class CategoryRepository {
   constructor(private readonly repository: CategoryEntity) {}
 
+  find(categoryName: string) {
+    return this.repository.category.findFirst({
+      where: {
+        name: categoryName,
+      },
+    });
+  }
+
   create(category: string) {
     return this.repository.category.create({
       data: {
