@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CategoryOnBoardEntity
-  extends PickType(PrismaService, ['category'])
+  extends PickType(PrismaService, ['categories_on_boards'])
   implements CategoryOnBoardModel
 {
   @ApiProperty({
