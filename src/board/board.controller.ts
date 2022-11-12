@@ -60,7 +60,6 @@ export class BoardController {
       createBoardDto,
     );
     await this.categoryOnBoardService.create(categories, board.id);
-
     return board;
   }
 
