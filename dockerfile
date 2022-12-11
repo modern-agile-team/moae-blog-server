@@ -1,18 +1,18 @@
-FROM node:16.17.0
+FROM node:16.17.0 AS build
+RUN mkdir /app
+WORKDIR /app
+COPY . .
+RUN npm ci
 
-WORKDIR /moae-blog-server
 
-COPY ./ .
 
 # generated prisma files
-COPY prisma ./prisma/
-
-COPY ./package.json /moae-blog-server
-COPY ./package-lock.json /moae-blog-server
-COPY ./tsconfig.json /moae-blog-server
-
 RUN npx prisma generate
-RUN npm ci
-RUN npm i -g @nestjs/cli@8.2.6
 
+FROM node:16.17.0-alpine
+WORKDIR /app
+ENV NODE_ENV production
+COPY --from=build /app ./
+
+EXPOSE 8080
 CMD ["npm", "run", "start:prod"]

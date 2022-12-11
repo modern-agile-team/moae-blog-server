@@ -120,3 +120,48 @@ export function DeleteCommentSwagger() {
     }),
   );
 }
+
+/**
+ * auth api
+ * 1. auth/google
+ *
+ */
+
+export function GetGoogleAuthSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '구글 연동',
+      description: '얘는.. 어떻게 테스트..?',
+    }),
+  );
+}
+
+export function GetGoogleRedirectSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '구글 연동 후 로그인 - auth/google하게 되면 알아서 실행',
+      description:
+        'moae access token 과 refresh token 발급' +
+        '성공하게 되면 page로 redirect 후 cookie에 토큰 저장',
+    }),
+  );
+}
+
+export function RefreshTokenSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary:
+        'refresh token 를 이용해 access token 재발급 (refresh token 필요)',
+    }),
+    ApiResponse({
+      schema: {
+        example: {
+          accessToken: 'access token 내용',
+          refreshToken: 'refresh token 내용',
+        },
+      },
+      status: 201,
+      description: 'success',
+    }),
+  );
+}
