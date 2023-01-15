@@ -15,7 +15,14 @@ import { CurrentUserDto } from './dto/current-user.dto';
 import { AuthService } from './auth.service';
 import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
 import { CacheService } from '../cache/cache.service';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  GetGoogleAuthSwagger,
+  GetGoogleRedirectSwagger,
+  RefreshTokenSwagger,
+} from '../common/decorators/compose-swagger.decorator';
 
+@ApiTags('auth API')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -26,6 +33,7 @@ export class AuthController {
   /**
    * Google Login - Redirect path /users/google/redirect
    */
+  @GetGoogleAuthSwagger()
   @UseGuards(AuthGuard('google'))
   @HttpCode(HttpStatus.OK)
   @Get('google')
@@ -38,6 +46,7 @@ export class AuthController {
    * @param currentUser { accessToken, name, email, baseUrl }
    * @returns cookie (accessToken, refreshToken) redirect 초기 화면 url
    */
+  @GetGoogleRedirectSwagger()
   @UseGuards(AuthGuard('google'))
   @HttpCode(HttpStatus.OK)
   @Get('google/redirect')
@@ -70,6 +79,7 @@ export class AuthController {
    * @returns body (accessToken, refreshToken)
    *
    */
+  @RefreshTokenSwagger()
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
   async refreshToken(@Req() req: any) {

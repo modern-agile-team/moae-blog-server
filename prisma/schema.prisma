@@ -72,8 +72,8 @@ model like_rel {
     userId Int @db.UnsignedInt @map("user_id")
     board board @relation(fields: [boardId], references: [id])
     boardId Int @db.UnsignedInt @map("board_id")
-    count Int  @default(0)
     createdAt DateTime @default(now()) @map("created_at")
+    @@unique([userId(sort: Desc), boardId])
 }
 
 model image {

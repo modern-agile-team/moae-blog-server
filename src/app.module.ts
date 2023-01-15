@@ -4,7 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { BoardModule } from './board/board.module';
 import { CommentModule } from './comment/comment.module';
-import { LikesModule } from './likes/likes.module';
+import { LikeModule } from './like/like.module';
 import { ImagesModule } from './images/images.module';
 import { AuthModule } from './auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
@@ -19,7 +19,7 @@ import { CategoryOnBoardModule } from './category-on-board/category-on-board.mod
     UsersModule,
     BoardModule,
     CommentModule,
-    LikesModule,
+    LikeModule,
     ImagesModule,
     AuthModule,
     RedisModule.forRootAsync({
