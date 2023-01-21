@@ -11,9 +11,7 @@ export class BoardService {
   constructor(private readonly boardsRepository: BoardRepository) {}
 
   async getAll(selectBoardDto: SelectBoardDto): Promise<board[]> {
-    !selectBoardDto.orderBy
-      ? (selectBoardDto.orderBy = 'desc')
-      : selectBoardDto.orderBy;
+    selectBoardDto.orderBy = selectBoardDto.orderBy ?? 'desc';
     return await this.boardsRepository.getAll(selectBoardDto);
   }
 
