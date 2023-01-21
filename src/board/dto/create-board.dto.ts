@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateBoardDto {
@@ -11,4 +11,9 @@ export class CreateBoardDto {
   @IsString()
   @ApiProperty({ description: '글 내용' })
   context: string;
+
+  @IsOptional()
+  @IsArray()
+  @ApiProperty({ description: '카테고리 내용' })
+  categories: string[];
 }

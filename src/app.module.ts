@@ -4,11 +4,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { BoardModule } from './board/board.module';
 import { CommentModule } from './comment/comment.module';
-import { LikesModule } from './likes/likes.module';
+import { LikeModule } from './like/like.module';
 import { ImagesModule } from './images/images.module';
 import { AuthModule } from './auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { RedisConfigService } from './cache/cache.config';
+import { CategoryModule } from './category/category.module';
+import { CategoryOnBoardModule } from './category-on-board/category-on-board.module';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { RedisConfigService } from './cache/cache.config';
     UsersModule,
     BoardModule,
     CommentModule,
-    LikesModule,
+    LikeModule,
     ImagesModule,
     AuthModule,
     RedisModule.forRootAsync({
@@ -25,6 +27,8 @@ import { RedisConfigService } from './cache/cache.config';
       useClass: RedisConfigService,
       inject: [ConfigService],
     }),
+    CategoryModule,
+    CategoryOnBoardModule,
   ],
 })
 export class AppModule {}
