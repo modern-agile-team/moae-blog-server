@@ -50,7 +50,7 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   @HttpCode(HttpStatus.OK)
   @Get('google/redirect')
-  @Redirect('https://moae-blog.vercel.app', 301)
+  @Redirect('http://localhost:3000', 301)
   async signInWithGoogleRedirect(
     @CurrentUser() { ...user }: CurrentUserDto,
     @Res() res: any,
