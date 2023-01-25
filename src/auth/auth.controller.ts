@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -39,6 +40,25 @@ export class AuthController {
     @CurrentUser() user: CurrentUserDto,
   ): Promise<boolean> {
     return await this.authService.checkUserExistence(user);
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post('sign-in')
+  async signIn(@Body() user: CurrentUserDto) {
+    const userInfo = await this.authService.signInUser(user);
+
+    const payload: JwtPayload = {
+      sub: userInfo.id.toString(),
+      authCode: userInfo.authCode,
+    };
+
+    const { accessToken, refreshToken } = await this.authService.setToken(
+      payload,
+    );
+
+    await this.cacheService.set(userInfo.id.toString(), refreshToken, 604800);
+
+    return { accessToken, refreshToken };
   }
 
   /**
