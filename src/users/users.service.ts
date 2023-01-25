@@ -7,6 +7,10 @@ import { UsersRepository } from './repository/users.repository';
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
+  async checkUserExsitence(email: string): Promise<boolean> {
+    return !!(await this.usersRepository.selectOneUserByEmail(email));
+  }
+
   async signInUser(user: CurrentUserDto): Promise<user> {
     const selectedUser: user = await this.usersRepository.selectOneUserByEmail(
       user.email,
@@ -16,6 +20,7 @@ export class UsersService {
       delete user.accessToken;
       return await this.usersRepository.createUser(user);
     }
+
     return selectedUser;
   }
 }

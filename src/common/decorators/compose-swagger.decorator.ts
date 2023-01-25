@@ -126,6 +126,33 @@ export function DeleteCommentSwagger() {
  * 1. auth/google
  *
  */
+export function GetUserExistence() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '유저 존재 여부 확인',
+      description: '토큰 담아서 요청하면 존재 여부에 따라 true/false 반환',
+    }),
+  );
+}
+
+export function PostSignIn() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '유저 로그인 & 회원가입',
+      description: '로그인 시도, 유저가 없으면 가입처리 병행',
+    }),
+    ApiResponse({
+      schema: {
+        example: {
+          accessToken: 'access token 내용',
+          refreshToken: 'refresh token 내용',
+        },
+      },
+      status: 201,
+      description: 'success',
+    }),
+  );
+}
 
 export function GetGoogleAuthSwagger() {
   return applyDecorators(

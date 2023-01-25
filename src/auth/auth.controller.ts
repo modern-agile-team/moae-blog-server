@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -19,6 +20,8 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   GetGoogleAuthSwagger,
   GetGoogleRedirectSwagger,
+  GetUserExistence,
+  PostSignIn,
   RefreshTokenSwagger,
 } from '../common/decorators/compose-swagger.decorator';
 
@@ -29,6 +32,38 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly cacheService: CacheService,
   ) {}
+
+  /**
+   * New Login Flow
+   */
+  @GetUserExistence()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('existence')
+  async checkUserExistence(
+    @CurrentUser() user: CurrentUserDto,
+  ): Promise<boolean> {
+    return await this.authService.checkUserExistence(user);
+  }
+
+  @PostSignIn()
+  @HttpCode(HttpStatus.CREATED)
+  @Post('sign-in')
+  async signIn(@Body() user: CurrentUserDto) {
+    const userInfo = await this.authService.signInUser(user);
+
+    const payload: JwtPayload = {
+      sub: userInfo.id.toString(),
+      authCode: userInfo.authCode,
+    };
+
+    const { accessToken, refreshToken } = await this.authService.setToken(
+      payload,
+    );
+
+    await this.cacheService.set(userInfo.id.toString(), refreshToken, 604800);
+
+    return { accessToken, refreshToken };
+  }
 
   /**
    * Google Login - Redirect path /users/google/redirect
