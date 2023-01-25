@@ -20,6 +20,8 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   GetGoogleAuthSwagger,
   GetGoogleRedirectSwagger,
+  GetUserExistence,
+  PostSignIn,
   RefreshTokenSwagger,
 } from '../common/decorators/compose-swagger.decorator';
 
@@ -34,6 +36,7 @@ export class AuthController {
   /**
    * New Login Flow
    */
+  @GetUserExistence()
   @UseGuards(AuthGuard('jwt'))
   @Get('existence')
   async checkUserExistence(
@@ -42,6 +45,7 @@ export class AuthController {
     return await this.authService.checkUserExistence(user);
   }
 
+  @PostSignIn()
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-in')
   async signIn(@Body() user: CurrentUserDto) {
