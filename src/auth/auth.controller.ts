@@ -31,6 +31,17 @@ export class AuthController {
   ) {}
 
   /**
+   * New Login Flow
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Get('existence')
+  async checkUserExistence(
+    @CurrentUser() user: CurrentUserDto,
+  ): Promise<boolean> {
+    return await this.authService.checkUserExistence(user);
+  }
+
+  /**
    * Google Login - Redirect path /users/google/redirect
    */
   @GetGoogleAuthSwagger()

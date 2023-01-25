@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
@@ -12,6 +12,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
+
+  async checkUserExistence(user: CurrentUserDto): Promise<boolean> {
+    return await this.usersService.checkUserExsitence(user.email);
+  }
 
   async signInUser(user: CurrentUserDto) {
     return await this.usersService.signInUser(user);
