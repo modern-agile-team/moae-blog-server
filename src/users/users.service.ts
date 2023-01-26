@@ -15,12 +15,6 @@ export class UsersService {
     const selectedUser: user = await this.usersRepository.selectOneUserByEmail(
       user.email,
     );
-
-    if (!selectedUser) {
-      delete user.accessToken;
-      return await this.usersRepository.createUser(user);
-    }
-
-    return selectedUser;
+    return selectedUser ?? (await this.usersRepository.createUser(user));
   }
 }
