@@ -19,7 +19,7 @@ import { SelectBoardDto } from './dto/select-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../common/decorators/user.decorator';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
   DeleteBoardSwagger,
   GetAllBoardSwagger,
@@ -29,6 +29,7 @@ import {
 import { CategoryService } from 'src/category/category.service';
 import { CategoryOnBoardService } from 'src/category-on-board/category-on-board.service';
 
+@ApiBearerAuth('accessToken')
 @ApiTags('board API')
 @Controller('board')
 export class BoardController {

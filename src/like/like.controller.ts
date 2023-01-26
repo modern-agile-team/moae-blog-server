@@ -8,12 +8,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LikeService } from './like.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetCountDto } from './dto/get-count.dto';
 import { RequestLikeDto } from './dto/request-like.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../common/decorators/user.decorator';
 
+@ApiBearerAuth('accessToken')
 @ApiTags('like API')
 @Controller('likes')
 export class LikeController {
