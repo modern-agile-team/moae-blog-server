@@ -127,7 +127,7 @@ export function DeleteCommentSwagger() {
  * 1. auth/google
  *
  */
-export function GetUserExistence() {
+export function GetUserExistenceSwagger() {
   return applyDecorators(
     ApiOperation({
       summary: '유저 존재 여부 확인',
@@ -136,7 +136,7 @@ export function GetUserExistence() {
   );
 }
 
-export function PostSignIn() {
+export function PostSignInSwagger() {
   return applyDecorators(
     ApiOperation({
       summary: '유저 로그인 & 회원가입',

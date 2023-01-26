@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -16,8 +15,8 @@ import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
 import { CacheService } from '../cache/cache.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import {
-  GetUserExistence,
-  PostSignIn,
+  GetUserExistenceSwagger,
+  PostSignInSwagger,
   RefreshTokenSwagger,
 } from '../common/decorators/compose-swagger.decorator';
 import { TokenDto } from './dto/token.dto';
@@ -33,7 +32,8 @@ export class AuthController {
   /**
    * New Login Flow
    */
-  @GetUserExistence()
+  @GetUserExistenceSwagger()
+  @ApiBearerAuth('accessToken')
   @UseGuards(AuthGuard('jwt'))
   @Get('existence')
   async checkUserExistence(
@@ -42,7 +42,7 @@ export class AuthController {
     return await this.authService.checkUserExistence(user);
   }
 
-  @PostSignIn()
+  @PostSignInSwagger()
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-in')
   async signIn(@Body() user: CurrentUserDto): Promise<TokenDto> {
