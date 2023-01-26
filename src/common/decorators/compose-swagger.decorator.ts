@@ -11,6 +11,7 @@ import { BoardEntity } from '../../board/board.entity';
 import { CreateBoardDto } from '../../board/dto/create-board.dto';
 import { UpdateBoardDto } from '../../board/dto/update-board.dto';
 import { CreateOrUpdateCommentDto } from 'src/comment/dto/create-or-update-comment.dto';
+import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 
 export function GetAllBoardSwagger() {
   return applyDecorators(
@@ -141,6 +142,11 @@ export function PostSignIn() {
       summary: '유저 로그인 & 회원가입',
       description: '로그인 시도, 유저가 없으면 가입처리 병행',
     }),
+    ApiBody({
+      type: CurrentUserDto,
+      description: '로그인/회원가입 필수 정보',
+      required: true,
+    }),
     ApiResponse({
       schema: {
         example: {
@@ -154,31 +160,16 @@ export function PostSignIn() {
   );
 }
 
-export function GetGoogleAuthSwagger() {
-  return applyDecorators(
-    ApiOperation({
-      summary: '구글 연동',
-      description: '얘는.. 어떻게 테스트..?',
-    }),
-  );
-}
-
-export function GetGoogleRedirectSwagger() {
-  return applyDecorators(
-    ApiOperation({
-      summary: '구글 연동 후 로그인 - auth/google하게 되면 알아서 실행',
-      description:
-        'moae access token 과 refresh token 발급' +
-        '성공하게 되면 page로 redirect 후 cookie에 토큰 저장',
-    }),
-  );
-}
-
 export function RefreshTokenSwagger() {
   return applyDecorators(
     ApiOperation({
       summary:
         'refresh token 를 이용해 access token 재발급 (refresh token 필요)',
+    }),
+    ApiBody({
+      type: String,
+      description: 'RefreshToken',
+      required: true,
     }),
     ApiResponse({
       schema: {

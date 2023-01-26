@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class CurrentUserDto {
   @IsNotEmpty()
@@ -12,8 +12,4 @@ export class CurrentUserDto {
   @IsNotEmpty()
   @IsString()
   baseUrl: string;
-
-  @IsOptional()
-  @IsString()
-  accessToken?: string;
 }
