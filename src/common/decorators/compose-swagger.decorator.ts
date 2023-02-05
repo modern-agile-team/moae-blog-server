@@ -31,6 +31,21 @@ export function GetAllBoardSwagger() {
   );
 }
 
+export function GetOneBoardSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '게시글 단건 조회',
+      description: '게시글 고유 번호에 해당하는 게시글을 조회합니다.',
+    }),
+    ApiResponse({
+      status: 200,
+      description: 'success',
+      type: BoardEntity,
+      isArray: true,
+    }),
+  );
+}
+
 export function PostBoardSwagger() {
   return applyDecorators(
     ApiOperation({
