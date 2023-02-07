@@ -13,21 +13,22 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { board, category } from '@prisma/client';
-import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../common/decorators/user.decorator';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import {
-  DeleteBoardSwagger,
-  GetAllBoardSwagger,
-  PatchBoardSwagger,
-  PostBoardSwagger,
-} from '../common/decorators/compose-swagger.decorator';
+import { BoardService } from './board.service';
 import { CategoryService } from 'src/category/category.service';
 import { CategoryOnBoardService } from 'src/category-on-board/category-on-board.service';
+import {
+  User,
+  DeleteBoardSwagger,
+  GetAllBoardSwagger,
+  GetOneBoardSwagger,
+  PatchBoardSwagger,
+  PostBoardSwagger,
+} from '../common/decorators';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth('accessToken')
 @ApiTags('board API')
@@ -44,6 +45,15 @@ export class BoardController {
   @Get('/all')
   async getAll(@Query() selectBoardDto: SelectBoardDto): Promise<board[]> {
     return await this.boardsService.getAll(selectBoardDto);
+  }
+
+  @GetOneBoardSwagger()
+  @HttpCode(HttpStatus.OK)
+  @Get('/:boardId')
+  async getOne(
+    @Param('boardId', ParseIntPipe) boardId: number,
+  ): Promise<board> {
+    return await this.boardsService.getOne(boardId);
   }
 
   @PostBoardSwagger()

@@ -23,6 +23,9 @@ export class BoardRepository {
       orderBy: {
         id: orderBy,
       },
+      include: {
+        user: true,
+      },
     });
   }
 
@@ -30,9 +33,12 @@ export class BoardRepository {
    * 한개의 게시글 select문
    * @param boardId
    */
-  async selectOneBoard(boardId: Prisma.boardWhereUniqueInput) {
+  async getOne(boardId) {
     return this.repository.board.findUnique({
-      where: boardId,
+      where: { id: boardId },
+      include: {
+        user: true,
+      },
     });
   }
 

@@ -15,6 +15,10 @@ export class BoardService {
     return await this.boardsRepository.getAll(selectBoardDto);
   }
 
+  async getOne(boardId: number): Promise<board> {
+    return await this.boardsRepository.getOne(boardId);
+  }
+
   async create(userId: number, createBoardDto: CreateBoardDto): Promise<board> {
     return await this.boardsRepository.create(userId, createBoardDto);
   }

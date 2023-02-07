@@ -2,6 +2,7 @@ import { ApiProperty, PickType } from '@nestjs/swagger';
 import { board as BoardModel } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { Transform } from 'class-transformer';
 
 @Injectable()
 export class BoardEntity
@@ -35,7 +36,7 @@ export class BoardEntity
   @ApiProperty({
     description: '생성 시간',
     required: true,
-    default: new Date(Date.now()),
+    default: Date.now(),
   })
   createdAt: Date;
 
@@ -43,5 +44,6 @@ export class BoardEntity
     description: '수정 시간',
     required: true,
   })
+  @Transform(({ value }) => value.getTime(), { toPlainOnly: true })
   updatedAt: Date;
 }
