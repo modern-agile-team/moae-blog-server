@@ -210,3 +210,13 @@ export function GetAllCategoriesSwagger() {
     }),
   );
 }
+
+export function GetBoardsInCategorySwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '카테고리에 해당하는 게시글 조회',
+      description:
+        '각 카테고리별 게시글들을 최신순으로 호출, 아직 필터(정렬) 없음',
+    }),
+  );
+}

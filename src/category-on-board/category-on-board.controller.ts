@@ -1,6 +1,16 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { GetAllCategoriesSwagger } from 'src/common/decorators';
+import {
+  GetAllCategoriesSwagger,
+  GetBoardsInCategorySwagger,
+} from 'src/common/decorators';
 import { CategoryOnBoardService } from './category-on-board.service';
 
 @ApiTags('Category API')
@@ -21,5 +31,23 @@ export class CategoryOnBoardController {
     }[]
   > {
     return await this.categoryOnBoardService.getAll();
+  }
+
+  @GetBoardsInCategorySwagger()
+  @HttpCode(HttpStatus.OK)
+  @Get(':categoryId')
+  async getBoardsInCategory(
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ): Promise<
+    {
+      id: number;
+      title: string;
+      userId: number;
+      context: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  > {
+    return await this.categoryOnBoardService.getBoardsInCategory(categoryId);
   }
 }

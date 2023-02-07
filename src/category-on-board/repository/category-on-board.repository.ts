@@ -40,4 +40,20 @@ export class CategoryOnBoardRepository {
       },
     });
   }
+
+  getBoardsInCategory(categoryId: number) {
+    return this.repository.categories_on_boards.findMany({
+      select: {
+        board: true,
+      },
+      where: {
+        categoryId,
+      },
+      orderBy: {
+        board: {
+          createdAt: 'desc',
+        },
+      },
+    });
+  }
 }

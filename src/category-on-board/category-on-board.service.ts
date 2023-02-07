@@ -51,4 +51,20 @@ export class CategoryOnBoardService {
 
     return mappedCategories;
   }
+
+  async getBoardsInCategory(categoryId: number): Promise<
+    {
+      id: number;
+      title: string;
+      userId: number;
+      context: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  > {
+    const boards = await this.categoryOnBoardRepository.getBoardsInCategory(
+      categoryId,
+    );
+    return boards.map(({ board }) => ({ ...board }));
+  }
 }
