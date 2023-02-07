@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { categories_on_boards, Prisma } from '@prisma/client';
 import { CategoryOnBoardEntity } from '../category-on-board.entity';
 
 @Injectable()
@@ -11,6 +10,33 @@ export class CategoryOnBoardRepository {
       data: {
         categoryId,
         boardId,
+      },
+    });
+  }
+
+  getAll() {
+    return this.repository.categories_on_boards.groupBy({
+      by: ['categoryId'],
+      _count: {
+        boardId: true,
+      },
+      orderBy: {
+        _count: {
+          boardId: 'desc',
+        },
+      },
+    });
+  }
+
+  getCategories() {
+    return this.repository.categories_on_boards.findMany({
+      select: {
+        category: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
       },
     });
   }

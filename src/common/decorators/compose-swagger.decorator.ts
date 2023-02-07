@@ -198,3 +198,15 @@ export function RefreshTokenSwagger() {
     }),
   );
 }
+
+/**
+ * category_on_board api
+ */
+export function GetAllCategoriesSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '카테고리 전체 조회',
+      description: '각 카테고리별 게시글 개수와 이름 응답',
+    }),
+  );
+}
