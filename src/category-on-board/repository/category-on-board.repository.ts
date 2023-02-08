@@ -13,47 +13,4 @@ export class CategoryOnBoardRepository {
       },
     });
   }
-
-  getAll() {
-    return this.repository.categories_on_boards.groupBy({
-      by: ['categoryId'],
-      _count: {
-        boardId: true,
-      },
-      orderBy: {
-        _count: {
-          boardId: 'desc',
-        },
-      },
-    });
-  }
-
-  getCategories() {
-    return this.repository.categories_on_boards.findMany({
-      select: {
-        category: {
-          select: {
-            name: true,
-            id: true,
-          },
-        },
-      },
-    });
-  }
-
-  getBoardsInCategory(categoryId: number) {
-    return this.repository.categories_on_boards.findMany({
-      select: {
-        board: true,
-      },
-      where: {
-        categoryId,
-      },
-      orderBy: {
-        board: {
-          createdAt: 'desc',
-        },
-      },
-    });
-  }
 }
