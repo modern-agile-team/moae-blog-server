@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { categories_on_boards, Prisma } from '@prisma/client';
 import { CategoryOnBoardEntity } from '../category-on-board.entity';
 
 @Injectable()

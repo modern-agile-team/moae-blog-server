@@ -29,4 +29,35 @@ export class CategoryService {
     const newCategories = await Promise.all(mappedRequest);
     return [...originCategories, ...newCategories];
   }
+
+  async getAll(): Promise<
+    {
+      id: number;
+      name: string;
+      createdAt: Date;
+      count: number;
+    }[]
+  > {
+    const categories = await this.categoryRepository.getCategories();
+    return categories.map(({ _count, ...category }) => ({
+      ...category,
+      count: _count.boards,
+    }));
+  }
+
+  async getBoardsInCategory(categoryId: number): Promise<
+    {
+      id: number;
+      title: string;
+      userId: number;
+      context: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  > {
+    const { boards } = await this.categoryRepository.getBoardsInCategory(
+      categoryId,
+    );
+    return boards.map(({ board }) => ({ ...board }));
+  }
 }
