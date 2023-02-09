@@ -30,7 +30,8 @@ model board {
     title String @db.VarChar(50)
     user user @relation(fields: [userId], references: [id])
     userId Int @db.UnsignedInt @map("user_id")
-    context String @db.VarChar(512)
+    context String @db.MediumText()
+    thumbnail String @db.VarChar(255)
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
     updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(3)
     likes like_rel[]

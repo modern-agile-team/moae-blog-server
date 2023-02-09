@@ -39,9 +39,18 @@ export class UsersRepository extends PrismaService {
    * 한명의 유저 select문
    * @param userId
    */
-  async selectOneUser(userId: Prisma.userWhereUniqueInput) {
+  getUser(userId: number) {
     return this.user.findUnique({
-      where: userId,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        baseUrl: true,
+        createdAt: true,
+        updatedAt: true,
+        boards: true,
+      },
+      where: { id: userId },
     });
   }
 

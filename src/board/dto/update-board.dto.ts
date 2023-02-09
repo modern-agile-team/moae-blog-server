@@ -11,4 +11,9 @@ export class UpdateBoardDto {
   @IsString()
   @ApiProperty({ description: '글 내용' })
   context: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ description: '썸네일' })
+  thumbnail = null;
 }

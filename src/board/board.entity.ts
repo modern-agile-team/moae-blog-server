@@ -34,6 +34,11 @@ export class BoardEntity
   context: string;
 
   @ApiProperty({
+    description: '썸네일',
+  })
+  thumbnail: string;
+
+  @ApiProperty({
     description: '생성 시간',
     required: true,
     default: Date.now(),

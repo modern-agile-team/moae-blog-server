@@ -13,6 +13,11 @@ export class CreateBoardDto {
   context: string;
 
   @IsOptional()
+  @IsString()
+  @ApiProperty({ description: '썸네일' })
+  thumbnail = null;
+
+  @IsOptional()
   @IsArray()
   @ApiProperty({ description: '카테고리 내용' })
   categories: string[];

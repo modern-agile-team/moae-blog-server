@@ -6,19 +6,21 @@ import {
   Param,
   ParseIntPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
   GetAllCategoriesSwagger,
   GetBoardsInCategorySwagger,
 } from 'src/common/decorators';
 import { CategoryService } from './category.service';
 
+@ApiTags('Category API')
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @GetAllCategoriesSwagger()
   @HttpCode(HttpStatus.OK)
-  @Get('all')
+  @Get()
   async getAll(): Promise<
     {
       id: number;

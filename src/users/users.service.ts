@@ -17,4 +17,8 @@ export class UsersService {
     );
     return selectedUser ?? (await this.usersRepository.createUser(user));
   }
+
+  async getUser(userId: number) {
+    return await this.usersRepository.getUser(userId);
+  }
 }

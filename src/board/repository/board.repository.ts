@@ -25,6 +25,7 @@ export class BoardRepository {
       },
       include: {
         user: true,
+        categories: true,
       },
     });
   }
@@ -33,11 +34,12 @@ export class BoardRepository {
    * 한개의 게시글 select문
    * @param boardId
    */
-  async getOne(boardId) {
+  getOne(boardId: number): Promise<board> {
     return this.repository.board.findUnique({
       where: { id: boardId },
       include: {
         user: true,
+        categories: true,
       },
     });
   }
@@ -49,12 +51,13 @@ export class BoardRepository {
    */
   async create(
     userId: number,
-    { title, context }: CreateBoardDto,
+    { title, context, thumbnail }: CreateBoardDto,
   ): Promise<board> {
     return await this.repository.board.create({
       data: {
         title,
         context,
+        thumbnail,
         user: {
           connect: {
             id: userId,
