@@ -20,26 +20,26 @@ import { User } from '../common/decorators/user.decorator';
 export class LikeController {
   constructor(private readonly likesService: LikeService) {}
 
-  @Get('/count')
+  @Get('count')
   async getCount(@Query() data: GetCountDto): Promise<number> {
     return await this.likesService.getCount(data);
   }
 
-  @Get('/')
+  @Get()
   @UseGuards(AuthGuard('jwt'))
   async getOne(@Query() data: RequestLikeDto, @User() userId: number) {
     data.userId = userId;
     return await this.likesService.getOneLike(data);
   }
 
-  @Post('/')
+  @Post()
   @UseGuards(AuthGuard('jwt'))
   async createLike(@Body() data: RequestLikeDto, @User() userId: number) {
     data.userId = userId;
     return await this.likesService.createLike(data);
   }
 
-  @Delete('/')
+  @Delete()
   @UseGuards(AuthGuard('jwt'))
   async deleteLike(@Body() data: RequestLikeDto, @User() userId: number) {
     data.userId = userId;
