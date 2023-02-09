@@ -12,10 +12,10 @@ export class CreateBoardDto {
   @ApiProperty({ description: '글 내용' })
   context: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  @ApiProperty({ description: '썸네일 이미지' })
-  thumbnail: string;
+  @ApiProperty({ description: '썸네일' })
+  thumbnail: string | null;
 
   @IsOptional()
   @IsArray()
