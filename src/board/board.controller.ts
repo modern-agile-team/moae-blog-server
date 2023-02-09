@@ -32,7 +32,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth('accessToken')
 @ApiTags('board API')
-@Controller('board')
+@Controller('boards')
 export class BoardController {
   constructor(
     private readonly boardsService: BoardService,
@@ -42,14 +42,14 @@ export class BoardController {
 
   @GetAllBoardSwagger()
   @HttpCode(HttpStatus.OK)
-  @Get('/all')
+  @Get()
   async getAll(@Query() selectBoardDto: SelectBoardDto): Promise<board[]> {
     return await this.boardsService.getAll(selectBoardDto);
   }
 
   @GetOneBoardSwagger()
   @HttpCode(HttpStatus.OK)
-  @Get('/:boardId')
+  @Get(':boardId')
   async getOne(
     @Param('boardId', ParseIntPipe) boardId: number,
   ): Promise<board> {
@@ -77,7 +77,7 @@ export class BoardController {
 
   @PatchBoardSwagger()
   @HttpCode(HttpStatus.OK)
-  @Patch('/:boardId')
+  @Patch(':boardId')
   @UseGuards(AuthGuard('jwt'))
   async update(
     @Param('boardId', ParseIntPipe) boardId: number,
@@ -95,7 +95,7 @@ export class BoardController {
 
   @DeleteBoardSwagger()
   @HttpCode(HttpStatus.OK)
-  @Delete('/:boardId')
+  @Delete(':boardId')
   @UseGuards(AuthGuard('jwt'))
   async delete(
     @Param('boardId', ParseIntPipe) boardId: number,

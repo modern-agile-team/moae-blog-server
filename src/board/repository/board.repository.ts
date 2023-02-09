@@ -33,11 +33,12 @@ export class BoardRepository {
    * 한개의 게시글 select문
    * @param boardId
    */
-  async getOne(boardId) {
+  getOne(boardId: number): Promise<board> {
     return this.repository.board.findUnique({
       where: { id: boardId },
       include: {
         user: true,
+        categories: true,
       },
     });
   }
