@@ -220,3 +220,13 @@ export function GetBoardsInCategorySwagger() {
     }),
   );
 }
+
+/** User API */
+export function GetUserSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '유저 정보 조회',
+      description: '토큰으로 유저 정보 확인, 게시글도 보내줌',
+    }),
+  );
+}
