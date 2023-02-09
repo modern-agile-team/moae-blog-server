@@ -26,14 +26,13 @@ import { CreateOrUpdateCommentDto } from './dto/create-or-update-comment.dto';
 
 @ApiTags('Comment API')
 @ApiBearerAuth('accessToken')
-@UseGuards(AuthGuard('jwt'))
-@Controller('board/:boardId/comment')
+@Controller('board/:boardId/comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @GetAllCommentsOnBoardSwagger()
   @HttpCode(HttpStatus.OK)
-  @Get('all')
+  @Get()
   async getAll(
     @Param('boardId', ParseIntPipe) boardId: number,
   ): Promise<comment[]> {
@@ -42,6 +41,7 @@ export class CommentController {
 
   @PostCommentSwagger()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
     @User() userId: number,
@@ -53,6 +53,7 @@ export class CommentController {
 
   @PutCommentSwagger()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'))
   @Put(':commentId')
   async update(
     @User() userId: number,
@@ -64,6 +65,7 @@ export class CommentController {
 
   @DeleteCommentSwagger()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':commentId')
   async delete(
     @User() userId: number,
