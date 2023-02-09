@@ -49,12 +49,13 @@ export class BoardRepository {
    */
   async create(
     userId: number,
-    { title, context }: CreateBoardDto,
+    { title, context, thumbnail }: CreateBoardDto,
   ): Promise<board> {
     return await this.repository.board.create({
       data: {
         title,
         context,
+        thumbnail,
         user: {
           connect: {
             id: userId,

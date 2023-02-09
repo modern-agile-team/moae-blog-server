@@ -34,6 +34,32 @@ const makeFakeBoard = async (count: number, userId: number): Promise<void> => {
       data: {
         title: faker.random.words(3),
         context: faker.random.words(10),
+        thumbnail: faker.image.technics(),
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+    });
+    await makeFakeComment(count, i, userId);
+  }
+};
+
+const makeFakeComment = async (
+  count: number,
+  boardId: number,
+  userId: number,
+): Promise<void> => {
+  for (let i = 0; i < count; i += 1) {
+    await prisma.comment.create({
+      data: {
+        context: faker.random.words(10),
+        board: {
+          connect: {
+            id: boardId,
+          },
+        },
         user: {
           connect: {
             id: userId,
