@@ -25,6 +25,7 @@ export class BoardRepository {
       },
       include: {
         user: true,
+        categories: true,
       },
     });
   }
