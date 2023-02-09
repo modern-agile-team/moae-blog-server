@@ -15,5 +15,5 @@ export class UpdateBoardDto {
   @IsOptional()
   @IsString()
   @ApiProperty({ description: '썸네일' })
-  thumbnail: string;
+  thumbnail = null;
 }
