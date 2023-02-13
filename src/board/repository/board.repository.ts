@@ -49,15 +49,12 @@ export class BoardRepository {
    * @CurrentUser userId - 작성자
    * @Body createBoardDto { title, userId, context }
    */
-  async create(
-    userId: number,
-    { title, context, thumbnail }: CreateBoardDto,
-  ): Promise<board> {
-    return await this.repository.board.create({
+  create(userId: number, { title, context, thumbnail }: CreateBoardDto) {
+    return this.repository.board.create({
       data: {
         title,
         context,
-        thumbnail,
+        thumbnail: thumbnail !== null ? thumbnail : 'thumbnail',
         user: {
           connect: {
             id: userId,

@@ -13,4 +13,18 @@ export class CategoryOnBoardRepository {
       },
     });
   }
+
+  multiCreate(categoryIds: number[], boardId: number) {
+    const data = categoryIds.map((categoryId) => {
+      return {
+        categoryId,
+        boardId,
+      };
+    });
+
+    return this.repository.categories_on_boards.createMany({
+      data: data,
+      skipDuplicates: true,
+    });
+  }
 }

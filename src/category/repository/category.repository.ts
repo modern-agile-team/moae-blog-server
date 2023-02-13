@@ -21,6 +21,19 @@ export class CategoryRepository {
     });
   }
 
+  multiCreate(categories: string[]) {
+    const data = categories.map((category) => {
+      return {
+        name: category,
+      };
+    });
+
+    return this.repository.category.createMany({
+      data: data,
+      skipDuplicates: true,
+    });
+  }
+
   getCategories() {
     return this.repository.category.findMany({
       include: {
@@ -54,6 +67,16 @@ export class CategoryRepository {
       },
       where: {
         id: categoryId,
+      },
+    });
+  }
+
+  getCategoriesByNames(categories: string[]) {
+    return this.repository.category.findMany({
+      where: {
+        name: {
+          in: categories,
+        },
       },
     });
   }
