@@ -28,13 +28,13 @@ export class BoardService {
     return await this.boardsRepository.getOne(boardId);
   }
 
-  async create(userId: number, createBoardDto: CreateBoardDto): Promise<board> {
+  async create(userId: number, dto: CreateBoardDto): Promise<board> {
     const [boards] = await this.prisma.$transaction([
-      this.boardsRepository.create(userId, createBoardDto),
-      this.categoriesRepository.multiCreate(createBoardDto.categories),
+      this.boardsRepository.create(userId, dto),
+      this.categoriesRepository.multiCreate(dto.categories),
     ]);
     const categories = await this.categoryService.getCategoriesByNames(
-      createBoardDto.categories,
+      dto.categories,
     );
     const categoryIds = categories.map((category) => category.id);
     await this.categoryOnBoardService.multiCreate(categoryIds, boards.id);

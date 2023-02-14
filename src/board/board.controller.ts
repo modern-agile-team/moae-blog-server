@@ -57,7 +57,7 @@ export class BoardController {
   async create(
     @Body() createBoardDto: CreateBoardDto,
     @User() userId: number,
-  ): Promise<any> {
+  ): Promise<board> {
     return await this.boardsService.create(userId, createBoardDto);
   }
 
