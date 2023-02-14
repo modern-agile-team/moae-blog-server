@@ -45,6 +45,7 @@ model category {
     name  String @db.VarChar(30)
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
     boards categories_on_boards[]
+    @@unique(name)
 }
 
 model categories_on_boards {
@@ -74,7 +75,7 @@ model like_rel {
     board board @relation(fields: [boardId], references: [id])
     boardId Int @db.UnsignedInt @map("board_id")
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
-    @@unique([userId(sort: Desc), boardId])
+    @@unique([userId, boardId])
 }
 
 model image {

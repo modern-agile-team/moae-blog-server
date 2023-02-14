@@ -60,4 +60,8 @@ export class CategoryService {
     );
     return boards.map(({ board }) => ({ ...board }));
   }
+
+  async getCategoriesByNames(categories: string[]) {
+    return this.categoryRepository.getCategoriesByNames(categories);
+  }
 }

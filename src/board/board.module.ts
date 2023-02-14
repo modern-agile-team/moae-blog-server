@@ -10,6 +10,7 @@ import { CategoryEntity } from 'src/category/category.entity';
 import { CategoryOnBoardService } from 'src/category-on-board/category-on-board.service';
 import { CategoryOnBoardRepository } from 'src/category-on-board/repository/category-on-board.repository';
 import { CategoryOnBoardEntity } from 'src/category-on-board/category-on-board.entity';
+import { PrismaClient } from '@prisma/client';
 
 @Module({
   controllers: [BoardController],
@@ -24,6 +25,7 @@ import { CategoryOnBoardEntity } from 'src/category-on-board/category-on-board.e
     CategoryOnBoardService,
     CategoryOnBoardRepository,
     CategoryOnBoardEntity,
+    PrismaClient,
   ],
 })
 export class BoardModule {}

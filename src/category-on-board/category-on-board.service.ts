@@ -14,4 +14,8 @@ export class CategoryOnBoardService {
     );
     return await Promise.all(mappedRequest);
   }
+
+  async multiCreate(categoryIds: number[], boardId: number) {
+    return this.categoryOnBoardRepository.multiCreate(categoryIds, boardId);
+  }
 }
