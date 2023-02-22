@@ -32,7 +32,7 @@ export class BoardService {
         data: {
           title: dto.title,
           context: dto.context,
-          thumbnail: dto.thumbnail !== null ? dto.thumbnail : 'thumbnail',
+          thumbnail: dto.thumbnail ?? 'thumbnail',
           user: {
             connect: {
               id: userId,
