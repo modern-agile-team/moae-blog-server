@@ -22,8 +22,8 @@ export class BoardService {
     return await this.boardsRepository.getAll(selectBoardDto);
   }
 
-  async getOne(boardId: number): Promise<board> {
-    return await this.boardsRepository.getOne(boardId);
+  async getOneById(boardId: number): Promise<board> {
+    return await this.boardsRepository.getOneById(boardId);
   }
 
   async create(userId: number, dto: CreateBoardDto): Promise<board> {

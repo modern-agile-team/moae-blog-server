@@ -34,12 +34,16 @@ export class BoardRepository {
    * 한개의 게시글 select문
    * @param boardId
    */
-  getOne(boardId: number): Promise<board> {
+  getOneById(boardId: number): Promise<board> {
     return this.repository.board.findUnique({
       where: { id: boardId },
       include: {
         user: true,
-        categories: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
       },
     });
   }
