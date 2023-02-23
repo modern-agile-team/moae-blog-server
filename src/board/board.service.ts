@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { board, PrismaClient } from '@prisma/client';
+import { board, category, PrismaClient } from '@prisma/client';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
 import { BoardRepository } from './repository/board.repository';
@@ -27,8 +27,8 @@ export class BoardService {
   }
 
   async create(userId: number, dto: CreateBoardDto): Promise<board> {
-    return await this.prisma.$transaction(async (prisma) => {
-      const board = await prisma.board.create({
+    const [board, ...categories] = await this.prisma.$transaction([
+      this.prisma.board.create({
         data: {
           title: dto.title,
           context: dto.context,
@@ -39,11 +39,9 @@ export class BoardService {
             },
           },
         },
-      });
-
-      for (let i = 0; i < dto.categories.length; i++) {
-        const name = dto.categories[i];
-        const category = await prisma.category.upsert({
+      }),
+      ...dto.categories.map((name) =>
+        this.prisma.category.upsert({
           where: {
             name,
           },
@@ -51,18 +49,21 @@ export class BoardService {
           create: {
             name,
           },
-        });
+        }),
+      ),
+    ]);
+    const mappedCategoriesOnBoards = categories.map((category) =>
+      this.prisma.categories_on_boards.create({
+        data: {
+          categoryId: category.id,
+          boardId: board.id,
+        },
+      }),
+    );
 
-        await prisma.categories_on_boards.create({
-          data: {
-            categoryId: category.id,
-            boardId: board.id,
-          },
-        });
-      }
+    await Promise.all(mappedCategoriesOnBoards);
 
-      return board;
-    });
+    return board;
   }
 
   async update(
