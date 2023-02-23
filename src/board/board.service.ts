@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { board, category, PrismaClient } from '@prisma/client';
+import { board, PrismaClient } from '@prisma/client';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
 import { BoardRepository } from './repository/board.repository';
