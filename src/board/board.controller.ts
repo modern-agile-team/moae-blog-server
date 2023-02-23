@@ -44,10 +44,10 @@ export class BoardController {
   @GetOneBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Get(':boardId')
-  async getOne(
+  async getOneById(
     @Param('boardId', ParseIntPipe) boardId: number,
   ): Promise<board> {
-    return await this.boardsService.getOne(boardId);
+    return await this.boardsService.getOneById(boardId);
   }
 
   @PostBoardSwagger()

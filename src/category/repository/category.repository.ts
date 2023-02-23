@@ -14,8 +14,12 @@ export class CategoryRepository {
   }
 
   create(category: string) {
-    return this.repository.category.create({
-      data: {
+    return this.repository.category.upsert({
+      where: {
+        name: category,
+      },
+      update: {},
+      create: {
         name: category,
       },
     });
@@ -27,7 +31,6 @@ export class CategoryRepository {
         name: category,
       };
     });
-
     return this.repository.category.createMany({
       data: data,
       skipDuplicates: true,
