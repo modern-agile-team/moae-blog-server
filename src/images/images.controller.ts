@@ -20,7 +20,7 @@ import {
 import { ImagesService } from './images.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-const imageType = [
+const IMAGE_TYPES = [
   'image/png',
   'image/jpg',
   'image/webp',
