@@ -71,11 +71,10 @@ export class ImagesController {
     @Param('boardId', ParseIntPipe) boardId: number,
     @User() userId: number,
   ) {
-    const dto = {
+    return this.imagesService.uploadThumbnail({
       thumbnail,
       userId,
       boardId,
-    };
-    return this.imagesService.uploadThumbnail(dto);
+    });
   }
 }
