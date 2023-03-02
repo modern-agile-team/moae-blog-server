@@ -11,5 +11,6 @@ import { CategoryOnBoardRepository } from './repository/category-on-board.reposi
     CategoryOnBoardRepository,
     CategoryOnBoardEntity,
   ],
+  exports: [CategoryOnBoardService],
 })
 export class CategoryOnBoardModule {}

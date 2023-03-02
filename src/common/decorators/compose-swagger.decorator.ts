@@ -1,6 +1,7 @@
-import { applyDecorators } from '@nestjs/common';
+import { applyDecorators, UseInterceptors } from '@nestjs/common';
 import {
   ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiOperation,
   ApiParam,
@@ -12,6 +13,8 @@ import { CreateBoardDto } from '../../board/dto/create-board.dto';
 import { UpdateBoardDto } from '../../board/dto/update-board.dto';
 import { CreateOrUpdateCommentDto } from 'src/comment/dto/create-or-update-comment.dto';
 import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express/multer/interceptors/file-fields.interceptor';
 
 export function GetAllBoardSwagger() {
   return applyDecorators(
@@ -227,6 +230,59 @@ export function GetUserSwagger() {
     ApiOperation({
       summary: '유저 정보 조회',
       description: '토큰으로 유저 정보 확인, 게시글도 보내줌',
+    }),
+  );
+}
+
+/**image API */
+export function PostFileUploadSwagger(fieldName = 'files') {
+  return applyDecorators(
+    ApiOperation({
+      summary: '이미지 파일 저장 api',
+      description: '최대 10개까지 가능하다.',
+    }),
+    UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 10 }])),
+    ApiConsumes('multipart/form-data'),
+    ApiBody({
+      schema: {
+        type: 'object',
+        properties: {
+          [fieldName]: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 201,
+      description: 'success',
+    }),
+  );
+}
+
+export function PostThumbnailUploadSwagger(fieldName = 'thumbnail') {
+  return applyDecorators(
+    ApiOperation({
+      summary: '썸네일 저장 api',
+      description: '1개만 저장 가능',
+    }),
+    UseInterceptors(FileInterceptor(fieldName)),
+    ApiConsumes('multipart/form-data'),
+    ApiBody({
+      schema: {
+        type: 'object',
+        properties: {
+          [fieldName]: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 201,
+      description: 'success',
     }),
   );
 }
