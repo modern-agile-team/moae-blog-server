@@ -11,7 +11,7 @@ export class ImagesService {
     if (!files) {
       throw new BadRequestException('no file exist');
     }
-    return { names: files.map(({ key }) => key.split('/').at(-1)) };
+    return { names: files.files.map(({ key }) => key.split('/').at(-1)) };
   }
 
   async uploadThumbnail(dto: UploadThumbnailDto) {
