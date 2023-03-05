@@ -41,7 +41,7 @@ export class ImagesController {
     FileFieldsInterceptor([{ name: 'files', maxCount: 10 }], {
       fileFilter: (req, file, callback) => {
         const ext = file.mimetype;
-        if (!imageType.includes(ext)) {
+        if (!IMAGE_TYPES.includes(ext)) {
           callback(new BadRequestException('이미지 타입만 가능'), false);
         }
         callback(null, true);
@@ -59,7 +59,7 @@ export class ImagesController {
     FileInterceptor('thumbnail', {
       fileFilter: (req, file, callback) => {
         const ext = file.mimetype;
-        if (!imageType.includes(ext)) {
+        if (!IMAGE_TYPES.includes(ext)) {
           callback(new BadRequestException('이미지 타입만 가능'), false);
         }
         callback(null, true);
