@@ -8,6 +8,7 @@ import { BoardUserType } from '../common/interfaces/index.interface';
 import { CategoryOnBoardService } from '../category-on-board/category-on-board.service';
 import { CategoryService } from '../category/category.service';
 import { SearchBoardDto } from './dto/search-board.dto';
+import { SearchWhere } from './board.type';
 
 @Injectable()
 export class BoardService {
@@ -19,16 +20,27 @@ export class BoardService {
   ) {}
 
   async search({ target, keyword, ...options }: SearchBoardDto) {
-    return await this.boardsRepository.search(
-      {
-        OR: keyword.map((key) => ({
-          [target]: {
-            contains: key,
-          },
-        })),
-      },
-      options,
-    );
+    const where: SearchWhere =
+      target === 'categories'
+        ? {
+            categories: {
+              some: {
+                category: {
+                  name: {
+                    in: keyword,
+                  },
+                },
+              },
+            },
+          }
+        : {
+            OR: keyword.map((key) => ({
+              [target]: {
+                contains: key,
+              },
+            })),
+          };
+    return await this.boardsRepository.search(where, options);
   }
 
   async getAll(selectBoardDto: SelectBoardDto): Promise<board[]> {
