@@ -5,37 +5,6 @@ import { PrismaService } from '../../prisma/prisma.service';
 @Injectable()
 export class UsersRepository extends PrismaService {
   /**
-   * 유저 전체를 조회하는 select문
-   * @param skip
-   * @param take
-   * @param cursor
-   * @param where
-   * @param orderBy
-   * @returns All User Info
-   */
-  async selectAllUser({
-    skip = 1,
-    take = 1,
-    cursor,
-    where,
-    orderBy,
-  }: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.userWhereUniqueInput;
-    where?: Prisma.userWhereInput;
-    orderBy?: Prisma.userOrderByWithRelationInput;
-  }) {
-    return this.user.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
-  }
-
-  /**
    * 한명의 유저 select문
    * @param userId
    */
@@ -68,11 +37,13 @@ export class UsersRepository extends PrismaService {
    * 한명의 유저 정보 update문
    * @param params { where, data }
    */
-  async updateUser(params: {
+  async updateUser({
+    where,
+    data,
+  }: {
     where: Prisma.userWhereUniqueInput;
     data: Prisma.userUpdateInput;
   }): Promise<user> {
-    const { where, data } = params;
     return this.user.update({
       data,
       where,
