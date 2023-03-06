@@ -5,10 +5,52 @@ import { SelectBoardDto } from '../dto/select-board.dto';
 import { BoardEntity } from '../board.entity';
 import { BoardUserType } from '../../common/interfaces/index.interface';
 import { UpdateBoardDto } from '../dto/update-board.dto';
+import { SearchWhere } from '../board.type';
+import { SearchBoardDto } from '../dto/search-board.dto';
 
 @Injectable()
 export class BoardRepository {
   constructor(private readonly repository: BoardEntity) {}
+
+  search(
+    where: SearchWhere,
+    { skip, take, orderBy }: Pick<SearchBoardDto, 'skip' | 'take' | 'orderBy'>,
+  ) {
+    return this.repository.board.findMany({
+      select: {
+        id: true,
+        title: true,
+        context: true,
+        thumbnail: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            baseUrl: true,
+          },
+        },
+        categories: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      where,
+      skip,
+      take,
+      orderBy: {
+        id: orderBy,
+      },
+    });
+  }
+
   /**
    * 게시글 전체를 조회하는 select문
    * @param {skip, take, orderBy}

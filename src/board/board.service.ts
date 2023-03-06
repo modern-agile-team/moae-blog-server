@@ -7,6 +7,7 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardUserType } from '../common/interfaces/index.interface';
 import { CategoryOnBoardService } from '../category-on-board/category-on-board.service';
 import { CategoryService } from '../category/category.service';
+import { SearchBoardDto } from './dto/search-board.dto';
 
 @Injectable()
 export class BoardService {
@@ -16,6 +17,19 @@ export class BoardService {
     private readonly boardsRepository: BoardRepository,
     private readonly prisma: PrismaClient,
   ) {}
+
+  async search({ target, keyword, ...options }: SearchBoardDto) {
+    return await this.boardsRepository.search(
+      {
+        OR: keyword.map((key) => ({
+          [target]: {
+            contains: key,
+          },
+        })),
+      },
+      options,
+    );
+  }
 
   async getAll(selectBoardDto: SelectBoardDto): Promise<board[]> {
     selectBoardDto.orderBy = selectBoardDto.orderBy ?? 'desc';
