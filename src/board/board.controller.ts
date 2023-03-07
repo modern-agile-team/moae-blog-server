@@ -25,14 +25,23 @@ import {
   GetOneBoardSwagger,
   PatchBoardSwagger,
   PostBoardSwagger,
+  SearchBoardSwagger,
 } from '../common/decorators';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { SearchBoardDto } from './dto/search-board.dto';
 
 @ApiBearerAuth('accessToken')
 @ApiTags('board API')
 @Controller('boards')
 export class BoardController {
   constructor(private readonly boardsService: BoardService) {}
+
+  @SearchBoardSwagger()
+  @HttpCode(HttpStatus.OK)
+  @Get('search')
+  async search(@Query() query: SearchBoardDto) {
+    return await this.boardsService.search(query);
+  }
 
   @GetAllBoardSwagger()
   @HttpCode(HttpStatus.OK)
