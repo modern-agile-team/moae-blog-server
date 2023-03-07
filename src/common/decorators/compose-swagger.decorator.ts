@@ -16,6 +16,16 @@ import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileFieldsInterceptor } from '@nestjs/platform-express/multer/interceptors/file-fields.interceptor';
 
+export function SearchBoardSwagger() {
+  return applyDecorators(
+    ApiOperation({
+      summary: '게시글 검색',
+      description:
+        'categories는 string[] 형태로, target은 name, title, context, categories 4개만 가능',
+    }),
+  );
+}
+
 export function GetAllBoardSwagger() {
   return applyDecorators(
     ApiOperation({

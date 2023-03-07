@@ -1,87 +1,100 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model user {
-    id Int  @default(autoincrement()) @id @db.UnsignedInt
-    name String @db.VarChar(50)
-    email String @db.VarChar(50)
-    baseUrl String @default("https://www.google.com") @map("base_url")
-    authCode  Int @default(0) @map("auth_code")
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(3)
-    likes like_rel[]
-    boards board[]
-    comments comment[]
+  id        Int        @id @default(autoincrement()) @db.UnsignedInt
+  name      String     @db.VarChar(50)
+  email     String     @db.VarChar(50)
+  baseUrl   String     @default("https://www.google.com") @map("base_url")
+  authCode  Int        @default(0) @map("auth_code")
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamp(3)
+  boards    board[]
+  comments  comment[]
+  likes     like_rel[]
 
-    @@unique([email, name])
+  @@unique([email, name])
+  @@fulltext([name])
 }
 
 model board {
-    id Int  @default(autoincrement()) @id @db.UnsignedInt
-    title String @db.VarChar(50)
-    user user @relation(fields: [userId], references: [id])
-    userId Int @db.UnsignedInt @map("user_id")
-    context String @db.LongText()
-    thumbnail String @db.VarChar(255)
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(3)
-    likes like_rel[]
-    comments comment[]
-    images image[]
-    categories categories_on_boards[]
+  id         Int                    @id @default(autoincrement()) @db.UnsignedInt
+  title      String                 @db.VarChar(50)
+  userId     Int                    @map("user_id") @db.UnsignedInt
+  context    String                 @db.LongText
+  thumbnail  String                 @db.VarChar(255)
+  createdAt  DateTime               @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt  DateTime               @updatedAt @map("updated_at") @db.Timestamp(3)
+  user       user                   @relation(fields: [userId], references: [id])
+  categories categories_on_boards[]
+  comments   comment[]
+  images     image[]
+  likes      like_rel[]
+
+  @@index([userId], map: "board_user_id_fkey")
+  @@fulltext([context])
+  @@fulltext([title])
+  @@fulltext([title, context])
 }
 
 model category {
-    id    Int   @db.UnsignedInt @id @default(autoincrement())
-    name  String @db.VarChar(30)
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
-    boards categories_on_boards[]
-    @@unique(name)
+  id        Int                    @id @default(autoincrement()) @db.UnsignedInt
+  name      String                 @unique @db.VarChar(30)
+  createdAt DateTime               @default(now()) @map("created_at") @db.Timestamp(3)
+  boards    categories_on_boards[]
+
+  @@fulltext([name])
 }
 
 model categories_on_boards {
-    board       board     @relation(fields: [boardId], references: [id], onDelete: Cascade)
-    boardId     Int @db.UnsignedInt @map("board_id") // relation scalar field (used in the `@relation` attribute above)
-    category   category @relation(fields: [categoryId], references: [id])
-    categoryId Int @db.UnsignedInt @map("category_id") // relation scalar field (used in the `@relation` attribute above)
+  boardId    Int      @map("board_id") @db.UnsignedInt
+  categoryId Int      @map("category_id") @db.UnsignedInt
+  board      board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  category   category @relation(fields: [categoryId], references: [id])
 
-    @@id([boardId, categoryId])
+  @@id([boardId, categoryId])
+  @@index([categoryId], map: "categories_on_boards_category_id_fkey")
 }
 
 model comment {
-    id Int  @default(autoincrement()) @id
-    user user @relation(fields: [userId], references: [id])
-    userId Int @db.UnsignedInt @map("user_id")
-    board board @relation(fields: [boardId], references: [id], onDelete: Cascade)
-    boardId Int @db.UnsignedInt @map("board_id")
-    context String @db.VarChar(512)
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
-    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(3)
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id") @db.UnsignedInt
+  boardId   Int      @map("board_id") @db.UnsignedInt
+  context   String   @db.VarChar(512)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(3)
+  board     board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  user      user     @relation(fields: [userId], references: [id])
+
+  @@index([boardId], map: "comment_board_id_fkey")
+  @@index([userId], map: "comment_user_id_fkey")
 }
 
 model like_rel {
-    id Int  @default(autoincrement()) @id
-    user user @relation(fields: [userId], references: [id])
-    userId Int @db.UnsignedInt @map("user_id")
-    board board @relation(fields: [boardId], references: [id])
-    boardId Int @db.UnsignedInt @map("board_id")
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
-    @@unique([userId, boardId])
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id") @db.UnsignedInt
+  boardId   Int      @map("board_id") @db.UnsignedInt
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
+  board     board    @relation(fields: [boardId], references: [id])
+  user      user     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, boardId])
+  @@index([boardId], map: "like_rel_board_id_fkey")
 }
 
 model image {
-    id Int @default(autoincrement()) @id
-    board board @relation(fields: [boardId], references: [id])
-    boardId Int @db.UnsignedInt @map("board_id")
-    imgUrl String @db.VarChar(255) @map("img_url")
-    createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
+  id        Int      @id @default(autoincrement())
+  boardId   Int      @map("board_id") @db.UnsignedInt
+  imgUrl    String   @map("img_url") @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(3)
+  board     board    @relation(fields: [boardId], references: [id])
+
+  @@index([boardId], map: "image_board_id_fkey")
 }

@@ -5,36 +5,6 @@ import { PrismaService } from '../../prisma/prisma.service';
 @Injectable()
 export class ImagesRepository extends PrismaService {
   /**
-   * 이미지 전체를 조회하는 select문
-   * @param skip
-   * @param take
-   * @param cursor
-   * @param where
-   * @param orderBy
-   */
-  async selectAllImage({
-    skip = 1,
-    take = 1,
-    cursor,
-    where,
-    orderBy,
-  }: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.imageWhereUniqueInput;
-    where?: Prisma.imageWhereInput;
-    orderBy?: Prisma.imageOrderByWithRelationInput;
-  }) {
-    return this.image.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-    });
-  }
-
-  /**
    * 한개의 이미지 select문
    * @param imageId
    */
