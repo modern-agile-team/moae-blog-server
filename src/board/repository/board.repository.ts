@@ -24,21 +24,10 @@ export class BoardRepository {
         thumbnail: true,
         createdAt: true,
         updatedAt: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            baseUrl: true,
-          },
-        },
+        user: true,
         categories: {
           select: {
-            category: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
+            category: true,
           },
         },
       },
