@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Controller,
   Param,
   ParseIntPipe,
@@ -9,8 +8,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileFieldsInterceptor } from '@nestjs/platform-express/multer/interceptors/file-fields.interceptor';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import {
   PostFileUploadSwagger,
@@ -20,52 +17,15 @@ import {
 import { ImagesService } from './images.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-const IMAGE_TYPES = [
-  'image/png',
-  'image/jpg',
-  'image/webp',
-  'image/jpeg',
-  'image/gif',
-];
-
 @ApiBearerAuth('accessToken')
 @ApiTags('image API')
 @Controller('uploads')
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
-  @PostFileUploadSwagger()
-  @Post('/')
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'files', maxCount: 10 }], {
-      fileFilter: (req, file, callback) => {
-        const ext = file.mimetype;
-        if (!IMAGE_TYPES.includes(ext)) {
-          callback(new BadRequestException('이미지 타입만 가능'), false);
-        }
-        callback(null, true);
-      },
-    }),
-  )
-  uploadFile(@UploadedFiles() files: { files: Express.MulterS3.File[] }) {
-    return this.imagesService.uploadFile(files);
-  }
-
   @PostThumbnailUploadSwagger()
   @Post('/thumbnail/:boardId')
   @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(
-    FileInterceptor('thumbnail', {
-      fileFilter: (req, file, callback) => {
-        const ext = file.mimetype;
-        if (!IMAGE_TYPES.includes(ext)) {
-          callback(new BadRequestException('이미지 타입만 가능'), false);
-        }
-        callback(null, true);
-      },
-    }),
-  )
   uploadThumbnail(
     @UploadedFile() thumbnail: Express.MulterS3.File,
     @Param('boardId', ParseIntPipe) boardId: number,
@@ -76,5 +36,13 @@ export class ImagesController {
       userId,
       boardId,
     });
+  }
+
+  @PostFileUploadSwagger()
+  @Post('/')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors()
+  uploadFile(@UploadedFiles() files: { files: Express.MulterS3.File[] }) {
+    return this.imagesService.uploadFile(files);
   }
 }
