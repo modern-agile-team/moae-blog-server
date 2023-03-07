@@ -41,7 +41,6 @@ export class ImagesController {
   @PostFileUploadSwagger()
   @Post('/')
   @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors()
   uploadFile(@UploadedFiles() files: { files: Express.MulterS3.File[] }) {
     return this.imagesService.uploadFile(files);
   }
