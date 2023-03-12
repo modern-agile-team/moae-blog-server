@@ -13,15 +13,22 @@ model user {
   name      String     @db.VarChar(50)
   email     String     @db.VarChar(50)
   baseUrl   String     @default("https://www.google.com") @map("base_url")
-  authCode  Int        @default(0) @map("auth_code")
+  authCode  Int        @default(3) @map("auth_code")
   createdAt DateTime   @default(now()) @map("created_at") @db.Timestamp(3)
   updatedAt DateTime   @updatedAt @map("updated_at") @db.Timestamp(3)
+  role      role       @relation(fields: [authCode], references: [id])
   boards    board[]
   comments  comment[]
   likes     like_rel[]
 
   @@unique([email, name])
   @@fulltext([name])
+}
+
+model role {
+  id        Int @id @db.UnsignedInt
+  role      String @db.TinyText
+  users     user[]
 }
 
 model board {

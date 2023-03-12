@@ -20,7 +20,7 @@ const makeFakeUser = async (
         email: faker.internet.email(),
         name: faker.name.fullName(),
         baseUrl: 'default.jpg',
-        authCode: Number(faker.datatype.boolean()),
+        authCode: 3,
       },
     });
 
@@ -42,7 +42,7 @@ const makeFakeBoard = async (count: number, userId: number): Promise<void> => {
         },
       },
     });
-    await makeFakeComment(count, i, userId);
+    // await makeFakeComment(count, i, userId);
   }
 };
 
