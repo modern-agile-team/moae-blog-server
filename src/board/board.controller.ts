@@ -29,6 +29,8 @@ import {
 } from '../common/decorators';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { SearchBoardDto } from './dto/search-board.dto';
+import { RolesGuard } from 'src/common/guards/role.guard';
+import { Role, ROLES_KEY } from 'src/common/decorators/role.decorator';
 
 @ApiBearerAuth('accessToken')
 @ApiTags('board API')
@@ -61,8 +63,9 @@ export class BoardController {
 
   @PostBoardSwagger()
   @HttpCode(HttpStatus.CREATED)
+  @Role(ROLES_KEY.MEMBER)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
-  @UseGuards(AuthGuard('jwt'))
   async create(
     @Body() createBoardDto: CreateBoardDto,
     @User() userId: number,
@@ -72,8 +75,9 @@ export class BoardController {
 
   @PatchBoardSwagger()
   @HttpCode(HttpStatus.OK)
+  @Role(ROLES_KEY.MEMBER)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch(':boardId')
-  @UseGuards(AuthGuard('jwt'))
   async update(
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() updateBoardDto: UpdateBoardDto,
@@ -90,8 +94,9 @@ export class BoardController {
 
   @DeleteBoardSwagger()
   @HttpCode(HttpStatus.OK)
+  @Role(ROLES_KEY.MEMBER)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Delete(':boardId')
-  @UseGuards(AuthGuard('jwt'))
   async delete(
     @Param('boardId', ParseIntPipe) boardId: number,
     @User() userId: number,

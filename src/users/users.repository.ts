@@ -27,9 +27,18 @@ export class UsersRepository extends PrismaService {
    * 새로운 유저 생성 create문
    * @param data { name, email }
    */
-  async createUser(data: Prisma.userCreateInput): Promise<user> {
+  async createUser({
+    email,
+    name,
+    baseUrl,
+  }: Prisma.userCreateInput): Promise<user> {
     return this.user.create({
-      data,
+      data: {
+        email,
+        name,
+        baseUrl,
+        authCode: 3,
+      },
     });
   }
 
