@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CategoryOnBoardRepository } from './repository/category-on-board.repository';
+import { CategoryOnBoardRepository } from './category-on-board.repository';
 
 @Injectable()
 export class CategoryOnBoardService {

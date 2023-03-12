@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { like_rel } from '@prisma/client';
-import { LikeEntity } from '../like.entity';
-import { GetCountDto } from '../dto/get-count.dto';
-import { RequestLikeDto } from '../dto/request-like.dto';
+import { LikeEntity } from './like.entity';
+import { GetCountDto } from './dto/get-count.dto';
+import { RequestLikeDto } from './dto/request-like.dto';
 
 @Injectable()
 export class LikesRepository {
