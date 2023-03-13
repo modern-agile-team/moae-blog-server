@@ -2,6 +2,7 @@
 
 import { PrismaClient, user } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { ROLES_KEY } from 'src/common/constant';
 
 // initialize Prisma Client
 const prisma = new PrismaClient();
@@ -20,7 +21,7 @@ const makeFakeUser = async (
         email: faker.internet.email(),
         name: faker.name.fullName(),
         baseUrl: 'default.jpg',
-        authCode: 3,
+        authCode: ROLES_KEY.USER,
       },
     });
 

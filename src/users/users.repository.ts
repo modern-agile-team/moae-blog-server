@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, user } from '@prisma/client';
+import { ROLES_KEY } from 'src/common/constant';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -37,7 +38,7 @@ export class UsersRepository extends PrismaService {
         email,
         name,
         baseUrl,
-        authCode: 3,
+        authCode: ROLES_KEY.USER,
       },
     });
   }
