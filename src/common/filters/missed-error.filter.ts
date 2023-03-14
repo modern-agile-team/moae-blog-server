@@ -1,10 +1,4 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  Logger,
-  HttpStatus,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, Logger, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
@@ -18,8 +12,6 @@ export class MissedErrorFilter implements ExceptionFilter {
 
     this.logger.error(exception);
 
-    response
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json({ message: '서버 에러입니다.' });
+    response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: '서버 에러입니다.' });
   }
 }

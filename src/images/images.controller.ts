@@ -6,14 +6,9 @@ import {
   UploadedFile,
   UploadedFiles,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  PostFileUploadSwagger,
-  PostThumbnailUploadSwagger,
-  User,
-} from '../common/decorators';
+import { PostFileUploadSwagger, PostThumbnailUploadSwagger, User } from '../common/decorators';
 import { ImagesService } from './images.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -31,11 +26,7 @@ export class ImagesController {
     @Param('boardId', ParseIntPipe) boardId: number,
     @User() userId: number,
   ) {
-    return this.imagesService.uploadThumbnail({
-      thumbnail,
-      userId,
-      boardId,
-    });
+    return this.imagesService.uploadThumbnail({ thumbnail, userId, boardId });
   }
 
   @PostFileUploadSwagger()

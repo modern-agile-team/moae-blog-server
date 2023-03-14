@@ -12,9 +12,7 @@ export class LikesRepository {
    * @param data {boardId}
    */
   async getCountByBoardId(data: GetCountDto): Promise<number> {
-    return this.repository.like_rel.count({
-      where: data,
-    });
+    return this.repository.like_rel.count({ where: data });
   }
 
   /**
@@ -22,9 +20,7 @@ export class LikesRepository {
    * @param data {userId, boardId}
    */
   async getOneLike(data: RequestLikeDto) {
-    return this.repository.like_rel.findFirst({
-      where: data,
-    });
+    return this.repository.like_rel.findFirst({ where: data });
   }
 
   /**
@@ -32,9 +28,7 @@ export class LikesRepository {
    * @param data {userId, boardId}
    */
   async createLike(data: RequestLikeDto): Promise<like_rel> {
-    return this.repository.like_rel.create({
-      data,
-    });
+    return this.repository.like_rel.create({ data });
   }
 
   /**
@@ -42,10 +36,6 @@ export class LikesRepository {
    * @param data {userId, boardId}
    */
   async deleteLike(data: RequestLikeDto): Promise<like_rel> {
-    return this.repository.like_rel.delete({
-      where: {
-        userId_boardId: data,
-      },
-    });
+    return this.repository.like_rel.delete({ where: { userId_boardId: data } });
   }
 }

@@ -6,11 +6,7 @@ import { CategoryOnBoardRepository } from './category-on-board.repository';
 
 @Module({
   controllers: [CategoryOnBoardController],
-  providers: [
-    CategoryOnBoardService,
-    CategoryOnBoardRepository,
-    CategoryOnBoardEntity,
-  ],
+  providers: [CategoryOnBoardService, CategoryOnBoardRepository, CategoryOnBoardEntity],
   exports: [CategoryOnBoardService],
 })
 export class CategoryOnBoardModule {}

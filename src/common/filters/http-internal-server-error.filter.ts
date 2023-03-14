@@ -20,8 +20,6 @@ export class HttpInternalServerErrorFilter implements ExceptionFilter {
 
     this.logger.error(exception);
 
-    response
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json(exception.getResponse());
+    response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(exception.getResponse());
   }
 }

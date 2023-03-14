@@ -11,12 +11,6 @@ import { CacheService } from '../cache/cache.service';
 @Module({
   imports: [JwtModule.registerAsync(JWT_CONFIG), JwtModule.register({})],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    UsersRepository,
-    UsersService,
-    RefreshTokenStrategy,
-    CacheService,
-  ],
+  providers: [AuthService, UsersRepository, UsersService, RefreshTokenStrategy, CacheService],
 })
 export class AuthModule {}

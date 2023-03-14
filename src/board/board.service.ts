@@ -5,16 +5,12 @@ import { SelectBoardDto } from './dto/select-board.dto';
 import { BoardRepository } from './board.repository';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardUserType } from '../common/interfaces/index.interface';
-import { CategoryOnBoardService } from '../category-on-board/category-on-board.service';
-import { CategoryService } from '../category/category.service';
 import { SearchBoardDto } from './dto/search-board.dto';
 import { SearchWhere } from './board.type';
 
 @Injectable()
 export class BoardService {
   constructor(
-    private readonly categoryService: CategoryService,
-    private readonly categoryOnBoardService: CategoryOnBoardService,
     private readonly boardsRepository: BoardRepository,
     private readonly prisma: PrismaClient,
   ) {}
@@ -22,24 +18,8 @@ export class BoardService {
   async search({ target, keyword, ...options }: SearchBoardDto) {
     const where: SearchWhere =
       target === 'categories'
-        ? {
-            categories: {
-              some: {
-                category: {
-                  name: {
-                    in: keyword,
-                  },
-                },
-              },
-            },
-          }
-        : {
-            OR: keyword.map((key) => ({
-              [target]: {
-                contains: key,
-              },
-            })),
-          };
+        ? { categories: { some: { category: { name: { in: keyword } } } } }
+        : { OR: keyword.map(key => ({ [target]: { contains: key } })) };
     return await this.boardsRepository.search(where, options);
   }
 
@@ -53,7 +33,7 @@ export class BoardService {
   }
 
   async create(userId: number, dto: CreateBoardDto): Promise<board> {
-    return await this.prisma.$transaction(async (prisma) => {
+    return await this.prisma.$transaction(async prisma => {
       const board = await prisma.board.create({
         data: {
           title: dto.title,
@@ -80,10 +60,7 @@ export class BoardService {
         });
 
         await prisma.categories_on_boards.create({
-          data: {
-            categoryId: category.id,
-            boardId: board.id,
-          },
+          data: { categoryId: category.id, boardId: board.id },
         });
       }
 
@@ -91,19 +68,11 @@ export class BoardService {
     });
   }
 
-  async update(
-    essentialData: BoardUserType,
-    updateBoardDto: UpdateBoardDto,
-  ): Promise<number> {
-    const result = await this.boardsRepository.update(
-      essentialData,
-      updateBoardDto,
-    );
-    return result.count;
+  async update(essentialData: BoardUserType, updateBoardDto: UpdateBoardDto): Promise<number> {
+    return (await this.boardsRepository.update(essentialData, updateBoardDto)).count;
   }
 
   async delete(essentialData: BoardUserType): Promise<number> {
-    const result = await this.boardsRepository.delete(essentialData);
-    return result.count;
+    return (await this.boardsRepository.delete(essentialData)).count;
   }
 }

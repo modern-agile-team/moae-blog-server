@@ -10,18 +10,8 @@ export class CommentRepository {
    * @param boardId 게시글 고유 번호
    * @param orderBy 정렬
    */
-  getAll(
-    boardId: number,
-    orderBy = 'asc' as Prisma.SortOrder,
-  ): Promise<comment[]> {
-    return this.repository.comment.findMany({
-      where: {
-        boardId,
-      },
-      orderBy: {
-        id: orderBy,
-      },
-    });
+  getAll(boardId: number, orderBy = 'asc' as Prisma.SortOrder): Promise<comment[]> {
+    return this.repository.comment.findMany({ where: { boardId }, orderBy: { id: orderBy } });
   }
 
   /**
@@ -34,16 +24,8 @@ export class CommentRepository {
     return this.repository.comment.create({
       data: {
         context,
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-        board: {
-          connect: {
-            id: boardId,
-          },
-        },
+        user: { connect: { id: userId } },
+        board: { connect: { id: boardId } },
       },
     });
   }
@@ -53,19 +35,10 @@ export class CommentRepository {
    * @param commentId 댓글 고유 번호
    * @param context 수정된 댓글 내용
    */
-  update(
-    userId: number,
-    commentId: number,
-    context: string,
-  ): Promise<Prisma.BatchPayload> {
+  update(userId: number, commentId: number, context: string): Promise<Prisma.BatchPayload> {
     return this.repository.comment.updateMany({
-      data: {
-        context,
-      },
-      where: {
-        id: commentId,
-        userId,
-      },
+      data: { context },
+      where: { id: commentId, userId },
     });
   }
 
@@ -75,11 +48,6 @@ export class CommentRepository {
    * @param commentId 삭제할 댓글 고유 번호
    */
   delete(userId: number, commentId: number): Promise<Prisma.BatchPayload> {
-    return this.repository.comment.deleteMany({
-      where: {
-        id: commentId,
-        userId,
-      },
-    });
+    return this.repository.comment.deleteMany({ where: { id: commentId, userId } });
   }
 }

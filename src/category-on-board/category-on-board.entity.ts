@@ -8,15 +8,9 @@ export class CategoryOnBoardEntity
   extends PickType(PrismaService, ['categories_on_boards'])
   implements CategoryOnBoardModel
 {
-  @ApiProperty({
-    description: 'index',
-    required: true,
-  })
+  @ApiProperty({ description: 'index', required: true })
   boardId: number;
 
-  @ApiProperty({
-    description: 'index',
-    required: true,
-  })
+  @ApiProperty({ description: 'index', required: true })
   categoryId: number;
 }

@@ -5,7 +5,5 @@ import { CategoryOnBoardService } from './category-on-board.service';
 @ApiTags('Category API')
 @Controller('category')
 export class CategoryOnBoardController {
-  constructor(
-    private readonly categoryOnBoardService: CategoryOnBoardService,
-  ) {}
+  constructor(private readonly categoryOnBoardService: CategoryOnBoardService) {}
 }

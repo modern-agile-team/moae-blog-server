@@ -11,9 +11,8 @@ export const VALIDATION_OPTIONS = {
 
       validationErrors.forEach(({ property, constraints }) => {
         logger.warn(
-          `에러 발생 키 : ${property}, 에러 제목 : ${Object.keys(
-            constraints,
-          )} , 에러 내용 : ${Object.values(constraints)}`,
+          `에러 발생 키 : ${property}, 에러 제목 : ${Object.keys(constraints)} 
+          , 에러 내용 : ${Object.values(constraints)}`,
           '🚧🚧🚧🚧 유효성 검사 에러 🚧🚧🚧🚧',
         );
       });

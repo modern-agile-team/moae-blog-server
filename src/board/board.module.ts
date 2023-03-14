@@ -11,13 +11,7 @@ import { CategoryOnBoardModule } from '../category-on-board/category-on-board.mo
 @Module({
   imports: [CategoryModule, CategoryOnBoardModule],
   controllers: [BoardController],
-  providers: [
-    BoardService,
-    BoardRepository,
-    TokenStrategy,
-    BoardEntity,
-    PrismaClient,
-  ],
+  providers: [BoardService, BoardRepository, TokenStrategy, BoardEntity, PrismaClient],
   exports: [BoardService],
 })
 export class BoardModule {}

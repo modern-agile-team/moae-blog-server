@@ -20,8 +20,6 @@ export class PrismaUnKnownFilter implements ExceptionFilter {
 
     this.logger.error(exception);
 
-    response
-      .status(HttpStatus.INTERNAL_SERVER_ERROR)
-      .json({ message: '서버 에러입니다.' });
+    response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: '서버 에러입니다.' });
   }
 }

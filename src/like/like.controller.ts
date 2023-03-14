@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { LikeService } from './like.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetCountDto } from './dto/get-count.dto';

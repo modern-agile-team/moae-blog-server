@@ -56,9 +56,7 @@ export class BoardController {
   @GetOneBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Get(':boardId')
-  async getOneById(
-    @Param('boardId', ParseIntPipe) boardId: number,
-  ): Promise<board> {
+  async getOneById(@Param('boardId', ParseIntPipe) boardId: number): Promise<board> {
     return await this.boardsService.getOneById(boardId);
   }
 
@@ -67,10 +65,7 @@ export class BoardController {
   @Roles(ROLES_KEY.MEMBER)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
-  async create(
-    @Body() createBoardDto: CreateBoardDto,
-    @User() userId: number,
-  ): Promise<board> {
+  async create(@Body() createBoardDto: CreateBoardDto, @User() userId: number): Promise<board> {
     return await this.boardsService.create(userId, createBoardDto);
   }
 
@@ -84,13 +79,7 @@ export class BoardController {
     @Body() updateBoardDto: UpdateBoardDto,
     @User() userId: number,
   ): Promise<number> {
-    return await this.boardsService.update(
-      {
-        boardId,
-        userId,
-      },
-      updateBoardDto,
-    );
+    return await this.boardsService.update({ boardId, userId }, updateBoardDto);
   }
 
   @DeleteBoardSwagger()

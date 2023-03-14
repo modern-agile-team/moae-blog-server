@@ -5,51 +5,13 @@ import { CategoryEntity } from './category.entity';
 export class CategoryRepository {
   constructor(private readonly repository: CategoryEntity) {}
 
-  find(categoryName: string) {
-    return this.repository.category.findFirst({
-      where: {
-        name: categoryName,
-      },
-    });
-  }
-
-  create(category: string) {
-    return this.repository.category.upsert({
-      where: {
-        name: category,
-      },
-      update: {},
-      create: {
-        name: category,
-      },
-    });
-  }
-
-  multiCreate(categories: string[]) {
-    const data = categories.map((category) => {
-      return {
-        name: category,
-      };
-    });
-    return this.repository.category.createMany({
-      data: data,
-      skipDuplicates: true,
-    });
-  }
-
   getCategories() {
     return this.repository.category.findMany({
       include: {
-        _count: {
-          select: {
-            boards: true,
-          },
-        },
+        _count: { select: { boards: true } },
       },
       orderBy: {
-        boards: {
-          _count: 'desc',
-        },
+        boards: { _count: 'desc' },
       },
     });
   }
@@ -75,12 +37,6 @@ export class CategoryRepository {
   }
 
   getCategoriesByNames(categories: string[]) {
-    return this.repository.category.findMany({
-      where: {
-        name: {
-          in: categories,
-        },
-      },
-    });
+    return this.repository.category.findMany({ where: { name: { in: categories } } });
   }
 }
