@@ -3,7 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_CONFIG } from '../config/jwt/jwt.config';
-import { UsersRepository } from '../users/repository/users.repository';
+import { UsersRepository } from '../users/users.repository';
 import { UsersService } from '../users/users.service';
 import { RefreshTokenStrategy } from '../common/strategy/refresh-token.strategy';
 import { CacheService } from '../cache/cache.service';

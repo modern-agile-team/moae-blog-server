@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { board, PrismaClient } from '@prisma/client';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { SelectBoardDto } from './dto/select-board.dto';
-import { BoardRepository } from './repository/board.repository';
+import { BoardRepository } from './board.repository';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardUserType } from '../common/interfaces/index.interface';
 import { CategoryOnBoardService } from '../category-on-board/category-on-board.service';

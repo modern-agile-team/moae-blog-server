@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LikesRepository } from './repository/likes.repository';
+import { LikesRepository } from './likes.repository';
 import { RequestLikeDto } from './dto/request-like.dto';
 import { GetCountDto } from './dto/get-count.dto';
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, user } from '@prisma/client';
-import { PrismaService } from '../../prisma/prisma.service';
+import { ROLES_KEY } from 'src/common/constant';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UsersRepository extends PrismaService {
@@ -27,9 +28,18 @@ export class UsersRepository extends PrismaService {
    * 새로운 유저 생성 create문
    * @param data { name, email }
    */
-  async createUser(data: Prisma.userCreateInput): Promise<user> {
+  async createUser({
+    email,
+    name,
+    baseUrl,
+  }: Prisma.userCreateInput): Promise<user> {
     return this.user.create({
-      data,
+      data: {
+        email,
+        name,
+        baseUrl,
+        authCode: ROLES_KEY.USER,
+      },
     });
   }
 

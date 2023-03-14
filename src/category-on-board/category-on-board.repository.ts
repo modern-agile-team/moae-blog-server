@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CategoryOnBoardEntity } from '../category-on-board.entity';
+import { CategoryOnBoardEntity } from './category-on-board.entity';
 
 @Injectable()
 export class CategoryOnBoardRepository {

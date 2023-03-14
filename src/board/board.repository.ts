@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { board, Prisma } from '@prisma/client';
-import { CreateBoardDto } from '../dto/create-board.dto';
-import { SelectBoardDto } from '../dto/select-board.dto';
-import { BoardEntity } from '../board.entity';
-import { BoardUserType } from '../../common/interfaces/index.interface';
-import { UpdateBoardDto } from '../dto/update-board.dto';
-import { SearchWhere } from '../board.type';
-import { SearchBoardDto } from '../dto/search-board.dto';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { SelectBoardDto } from './dto/select-board.dto';
+import { BoardEntity } from './board.entity';
+import { BoardUserType } from '../common/interfaces/index.interface';
+import { UpdateBoardDto } from './dto/update-board.dto';
+import { SearchWhere } from './board.type';
+import { SearchBoardDto } from './dto/search-board.dto';
 
 @Injectable()
 export class BoardRepository {
