@@ -9,9 +9,7 @@ export class ImagesRepository extends PrismaService {
    * @param imageId
    */
   async selectOneImage(imageId: Prisma.imageWhereUniqueInput) {
-    return this.image.findUnique({
-      where: imageId,
-    });
+    return this.image.findUnique({ where: imageId });
   }
 
   /**
@@ -19,24 +17,21 @@ export class ImagesRepository extends PrismaService {
    * @param data { boardId, imgUrl }
    */
   async createImage(data: Prisma.imageCreateInput): Promise<image> {
-    return this.image.create({
-      data,
-    });
+    return this.image.create({ data });
   }
 
   /**
    * 한개의 이미지 정보 update문
    * @param params { where, data }
    */
-  async updateImage(params: {
+  async updateImage({
+    data,
+    where,
+  }: {
     where: Prisma.imageWhereUniqueInput;
     data: Prisma.imageUpdateInput;
   }): Promise<image> {
-    const { where, data } = params;
-    return this.image.update({
-      data,
-      where,
-    });
+    return this.image.update({ data, where });
   }
 
   /**
@@ -44,8 +39,6 @@ export class ImagesRepository extends PrismaService {
    * @param where
    */
   async deleteImage(where: Prisma.imageWhereUniqueInput): Promise<image> {
-    return this.image.delete({
-      where,
-    });
+    return this.image.delete({ where });
   }
 }

@@ -12,9 +12,7 @@ export class UsersService {
   }
 
   async signInUser(user: CurrentUserDto): Promise<user> {
-    const selectedUser: user = await this.usersRepository.selectOneUserByEmail(
-      user.email,
-    );
+    const selectedUser: user = await this.usersRepository.selectOneUserByEmail(user.email);
     return selectedUser ?? (await this.usersRepository.createUser(user));
   }
 

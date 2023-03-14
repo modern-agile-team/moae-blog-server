@@ -89,7 +89,7 @@ export class BoardRepository {
       data: {
         title,
         context,
-        thumbnail: thumbnail !== null ? thumbnail : 'thumbnail',
+        thumbnail: thumbnail ?? 'thumbnail',
         user: {
           connect: {
             id: userId,

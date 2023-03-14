@@ -1,9 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
 @Catch()
@@ -18,9 +13,7 @@ export default class CatchException implements ExceptionFilter {
 
     if (context === null) {
       if (request.route) {
-        context = `${Object.keys(request.route?.method)[0]} - ${
-          request.route?.path
-        }`;
+        context = `${Object.keys(request.route?.method)[0]} - ${request.route?.path}`;
       }
     }
 

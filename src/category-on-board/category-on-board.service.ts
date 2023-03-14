@@ -3,9 +3,7 @@ import { CategoryOnBoardRepository } from './category-on-board.repository';
 
 @Injectable()
 export class CategoryOnBoardService {
-  constructor(
-    private readonly categoryOnBoardRepository: CategoryOnBoardRepository,
-  ) {}
+  constructor(private readonly categoryOnBoardRepository: CategoryOnBoardRepository) {}
 
   async create(categoryId: number, boardId: number) {
     return this.categoryOnBoardRepository.create(categoryId, boardId);

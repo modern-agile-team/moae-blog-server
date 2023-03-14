@@ -5,20 +5,10 @@ import { S3Client } from '@aws-sdk/client-s3';
 import * as path from 'path';
 import { BadRequestException } from '@nestjs/common';
 
-const IMAGE_TYPES = [
-  'image/png',
-  'image/jpg',
-  'image/webp',
-  'image/jpeg',
-  'image/gif',
-];
+const IMAGE_TYPES = ['image/png', 'image/jpg', 'image/webp', 'image/jpeg', 'image/gif'];
 
-export const multerOptionsFactory = (
-  configService: ConfigService,
-): MulterOptions => {
-  const s3 = new S3Client({
-    region: configService.get('AWS_BUCKET_REGION'),
-  });
+export const multerOptionsFactory = (configService: ConfigService): MulterOptions => {
+  const s3 = new S3Client({ region: configService.get('AWS_BUCKET_REGION') });
 
   return {
     fileFilter: (req, file, callback) => {

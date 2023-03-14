@@ -15,7 +15,7 @@ export class CreateBoardDto {
   @IsOptional()
   @IsString()
   @ApiProperty({ description: '썸네일' })
-  thumbnail = null;
+  thumbnail: string | null = null;
 
   @IsOptional()
   @IsArray()

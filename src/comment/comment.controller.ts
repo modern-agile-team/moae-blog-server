@@ -33,9 +33,7 @@ export class CommentController {
   @GetAllCommentsOnBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Get()
-  async getAll(
-    @Param('boardId', ParseIntPipe) boardId: number,
-  ): Promise<comment[]> {
+  async getAll(@Param('boardId', ParseIntPipe) boardId: number): Promise<comment[]> {
     return await this.commentService.getAll(boardId);
   }
 

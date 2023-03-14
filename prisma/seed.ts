@@ -11,10 +11,7 @@ async function main() {
   await makeFakeUser(100, 5); // 유저 인원, 게시글 개수
 }
 
-const makeFakeUser = async (
-  userCnt: number,
-  boardCnt: number,
-): Promise<void> => {
+const makeFakeUser = async (userCnt: number, boardCnt: number): Promise<void> => {
   for (let i = 0; i < userCnt; i += 1) {
     const user: user = await prisma.user.create({
       data: {
@@ -47,11 +44,7 @@ const makeFakeBoard = async (count: number, userId: number): Promise<void> => {
   }
 };
 
-const makeFakeComment = async (
-  count: number,
-  boardId: number,
-  userId: number,
-): Promise<void> => {
+const makeFakeComment = async (count: number, boardId: number, userId: number): Promise<void> => {
   for (let i = 0; i < count; i += 1) {
     await prisma.comment.create({
       data: {
@@ -73,7 +66,7 @@ const makeFakeComment = async (
 
 // execute the main function
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error(e);
     process.exit(1);
   })

@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from './decorator/current-user.decorator';
 import { CurrentUserDto } from './dto/current-user.dto';
@@ -36,9 +28,7 @@ export class AuthController {
   @ApiBearerAuth('accessToken')
   @UseGuards(AuthGuard('jwt'))
   @Get('existence')
-  async checkUserExistence(
-    @CurrentUser() user: CurrentUserDto,
-  ): Promise<boolean> {
+  async checkUserExistence(@CurrentUser() user: CurrentUserDto): Promise<boolean> {
     return await this.authService.checkUserExistence(user);
   }
 
@@ -47,13 +37,8 @@ export class AuthController {
   @Post('sign-in')
   async signIn(@Body() user: CurrentUserDto): Promise<TokenDto> {
     const userInfo = await this.authService.signInUser(user);
-    const payload: JwtPayload = {
-      sub: userInfo.id.toString(),
-      authCode: userInfo.authCode,
-    };
-    const { accessToken, refreshToken } = await this.authService.setToken(
-      payload,
-    );
+    const payload: JwtPayload = { sub: userInfo.id.toString(), authCode: userInfo.authCode };
+    const { accessToken, refreshToken } = await this.authService.setToken(payload);
 
     await this.cacheService.set(userInfo.id.toString(), refreshToken, 604800);
 
@@ -73,21 +58,12 @@ export class AuthController {
   async refreshToken(@CurrentUser() user: CurrentUserDto): Promise<TokenDto> {
     const { refreshToken, sub, authCode } = user as JwtPayload &
       CurrentUserDto & { refreshToken: string };
-    const accessToken: string = await this.authService.setAccessToken({
-      sub,
-      authCode,
-    });
-    const madeNewTokens: TokenDto = {
-      accessToken,
-      refreshToken,
-    };
+    const accessToken: string = await this.authService.setAccessToken({ sub, authCode });
+    const madeNewTokens: TokenDto = { accessToken, refreshToken };
     const redisRefreshToken: string = await this.cacheService.get(sub);
 
     if (!redisRefreshToken) {
-      const refreshToken: string = await this.authService.setRefreshToken({
-        sub,
-        authCode,
-      });
+      const refreshToken: string = await this.authService.setRefreshToken({ sub, authCode });
       await this.cacheService.set(sub, refreshToken, 604800);
 
       madeNewTokens.refreshToken = refreshToken;

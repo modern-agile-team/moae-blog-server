@@ -28,46 +28,8 @@ export class UsersRepository extends PrismaService {
    * 새로운 유저 생성 create문
    * @param data { name, email }
    */
-  async createUser({
-    email,
-    name,
-    baseUrl,
-  }: Prisma.userCreateInput): Promise<user> {
-    return this.user.create({
-      data: {
-        email,
-        name,
-        baseUrl,
-        authCode: ROLES_KEY.USER,
-      },
-    });
-  }
-
-  /**
-   * 한명의 유저 정보 update문
-   * @param params { where, data }
-   */
-  async updateUser({
-    where,
-    data,
-  }: {
-    where: Prisma.userWhereUniqueInput;
-    data: Prisma.userUpdateInput;
-  }): Promise<user> {
-    return this.user.update({
-      data,
-      where,
-    });
-  }
-
-  /**
-   * 한명의 유저 delete문
-   * @param where
-   */
-  async deleteUser(where: Prisma.userWhereUniqueInput): Promise<user> {
-    return this.user.delete({
-      where,
-    });
+  async createUser({ email, name, baseUrl }: Prisma.userCreateInput): Promise<user> {
+    return this.user.create({ data: { email, name, baseUrl, authCode: ROLES_KEY.USER } });
   }
 
   /**
@@ -75,10 +37,6 @@ export class UsersRepository extends PrismaService {
    * @param email
    */
   async selectOneUserByEmail(email: string): Promise<user> {
-    return await this.user.findFirst({
-      where: {
-        email,
-      },
-    });
+    return await this.user.findFirst({ where: { email } });
   }
 }

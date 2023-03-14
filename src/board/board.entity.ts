@@ -5,50 +5,26 @@ import { Injectable } from '@nestjs/common';
 import { Transform } from 'class-transformer';
 
 @Injectable()
-export class BoardEntity
-  extends PickType(PrismaService, ['board'])
-  implements BoardModel
-{
-  @ApiProperty({
-    description: 'index',
-    required: true,
-  })
+export class BoardEntity extends PickType(PrismaService, ['board']) implements BoardModel {
+  @ApiProperty({ description: 'index', required: true })
   id: number;
 
-  @ApiProperty({
-    description: 'title',
-    required: true,
-  })
+  @ApiProperty({ description: 'title', required: true })
   title: string;
 
-  @ApiProperty({
-    description: 'user index',
-    required: true,
-  })
+  @ApiProperty({ description: 'user index', required: true })
   userId: number;
 
-  @ApiProperty({
-    description: '게시판 내용',
-    required: true,
-  })
+  @ApiProperty({ description: '게시판 내용', required: true })
   context: string;
 
-  @ApiProperty({
-    description: '썸네일',
-  })
+  @ApiProperty({ description: '썸네일' })
   thumbnail: string;
 
-  @ApiProperty({
-    description: '생성 시간',
-    required: true,
-    default: Date.now(),
-  })
+  @ApiProperty({ description: '생성 시간', required: true, default: Date.now() })
   createdAt: Date;
 
-  @ApiProperty({
-    description: '수정 시간',
-    required: true,
-  })
+  @ApiProperty({ description: '수정 시간', required: true })
   @Transform(({ value }) => value.getTime(), { toPlainOnly: true })
   updatedAt: Date;
 }
