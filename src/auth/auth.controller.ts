@@ -35,8 +35,10 @@ export class AuthController {
   @Post('sign-in')
   async signIn(@Body() user: CurrentUserDto) {
     const { id, authCode } = await this.authService.signInUser(user);
-    const payload: JwtPayload = { userId: id, authCode };
-    const { accessToken, refreshToken }: TokenDto = await this.authService.setToken(payload);
+    const { accessToken, refreshToken }: TokenDto = await this.authService.setToken({
+      userId: id,
+      authCode,
+    });
 
     await this.cacheService.set(id.toString(), refreshToken, 604800);
 
