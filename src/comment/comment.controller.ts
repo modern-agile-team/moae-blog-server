@@ -14,6 +14,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { comment, Prisma } from '@prisma/client';
+import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 import {
   DeleteCommentSwagger,
   GetAllCommentsOnBoardSwagger,
@@ -42,11 +43,11 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
-    @User() userId: number,
+    @User() { id }: CurrentUserDto,
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<comment> {
-    return await this.commentService.create(userId, boardId, context);
+    return await this.commentService.create(id, boardId, context);
   }
 
   @PutCommentSwagger()
@@ -54,11 +55,11 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Put(':commentId')
   async update(
-    @User() userId: number,
+    @User() { id }: CurrentUserDto,
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentService.update(userId, commentId, context);
+    return await this.commentService.update(id, commentId, context);
   }
 
   @DeleteCommentSwagger()
@@ -66,10 +67,10 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Delete(':commentId')
   async delete(
-    @User() userId: number,
+    @User() { id }: CurrentUserDto,
     @Param('commentId', ParseIntPipe)
     commentId: number,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentService.delete(userId, commentId);
+    return await this.commentService.delete(id, commentId);
   }
 }
