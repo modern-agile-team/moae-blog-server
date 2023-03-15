@@ -21,11 +21,9 @@ export class AuthController {
     private readonly cacheService: CacheService,
   ) {}
 
-  /**
-   * New Login Flow
-   */
-  @GetUserExistenceSwagger()
   @ApiBearerAuth('accessToken')
+  @GetUserExistenceSwagger()
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   @Get('existence')
   async checkUserExistence(@User() user: CurrentUserDto): Promise<boolean> {
@@ -51,10 +49,10 @@ export class AuthController {
    * @returns body (accessToken, refreshToken)
    *
    */
-  @RefreshTokenSwagger()
   @ApiBearerAuth('accessToken')
-  @Post('refresh')
+  @RefreshTokenSwagger()
   @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('refresh')
   async refreshToken(
     @User() { userId, authCode, refreshToken }: JwtPayload & { refreshToken: string },
   ): Promise<TokenDto> {

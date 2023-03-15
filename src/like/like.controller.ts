@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { LikeService } from './like.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetCountDto } from './dto/get-count.dto';
@@ -13,27 +23,31 @@ import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 export class LikeController {
   constructor(private readonly likesService: LikeService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Get('count')
   async getCount(@Query() data: GetCountDto): Promise<number> {
     return await this.likesService.getCount(data);
   }
 
-  @Get()
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
+  @Get()
   async getOne(@Query() data: RequestLikeDto, @User() { id }: CurrentUserDto) {
     data.userId = id;
     return await this.likesService.getOneLike(data);
   }
 
-  @Post()
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard('jwt'))
+  @Post()
   async createLike(@Body() data: RequestLikeDto, @User() { id }: CurrentUserDto) {
     data.userId = id;
     return await this.likesService.createLike(data);
   }
 
-  @Delete()
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
+  @Delete()
   async deleteLike(@Body() data: RequestLikeDto, @User() { id }: CurrentUserDto) {
     data.userId = id;
     return await this.likesService.deletedLike(data);

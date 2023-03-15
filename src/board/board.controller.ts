@@ -60,11 +60,11 @@ export class BoardController {
     return await this.boardsService.getOneById(boardId);
   }
 
+  @ApiBearerAuth('accessToken')
   @PostBoardSwagger()
   @HttpCode(HttpStatus.CREATED)
   @Roles(ROLES_KEY.MEMBER)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiBearerAuth('accessToken')
   @Post()
   async create(
     @Body() createBoardDto: CreateBoardDto,
@@ -73,11 +73,11 @@ export class BoardController {
     return await this.boardsService.create(id, createBoardDto);
   }
 
+  @ApiBearerAuth('accessToken')
   @PatchBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Roles(ROLES_KEY.MEMBER)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiBearerAuth('accessToken')
   @Patch(':boardId')
   async update(
     @Param('boardId', ParseIntPipe) boardId: number,
@@ -87,11 +87,11 @@ export class BoardController {
     return await this.boardsService.update({ boardId, userId: id }, updateBoardDto);
   }
 
+  @ApiBearerAuth('accessToken')
   @DeleteBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Roles(ROLES_KEY.MEMBER)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @ApiBearerAuth('accessToken')
   @Delete(':boardId')
   async delete(
     @Param('boardId', ParseIntPipe) boardId: number,

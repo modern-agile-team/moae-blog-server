@@ -20,8 +20,8 @@ export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
   @PostThumbnailUploadSwagger()
-  @Post('/thumbnail/:boardId')
   @UseGuards(AuthGuard('jwt'))
+  @Post('/thumbnail/:boardId')
   uploadThumbnail(
     @UploadedFile() thumbnail: Express.MulterS3.File,
     @Param('boardId', ParseIntPipe) boardId: number,
@@ -31,8 +31,8 @@ export class ImagesController {
   }
 
   @PostFileUploadSwagger()
-  @Post('/')
   @UseGuards(AuthGuard('jwt'))
+  @Post('/')
   uploadFile(@UploadedFiles() files: { files: Express.MulterS3.File[] }) {
     return this.imagesService.uploadFile(files);
   }
