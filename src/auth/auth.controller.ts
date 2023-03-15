@@ -36,7 +36,7 @@ export class AuthController {
   async signIn(@Body() user: CurrentUserDto) {
     const { id, authCode } = await this.authService.signInUser(user);
     const { accessToken, refreshToken }: TokenDto = await this.authService.setToken({
-      userId: id,
+      id,
       authCode,
     });
 
@@ -56,15 +56,15 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
   async refreshToken(
-    @User() { userId, authCode, refreshToken }: JwtPayload & { refreshToken: string },
+    @User() { id, authCode, refreshToken }: JwtPayload & { refreshToken: string },
   ): Promise<TokenDto> {
-    const accessToken: string = await this.authService.setAccessToken({ userId, authCode });
+    const accessToken: string = await this.authService.setAccessToken({ id, authCode });
     const madeNewTokens: TokenDto = { accessToken, refreshToken };
-    const redisRefreshToken: string = await this.cacheService.get(userId.toString());
+    const redisRefreshToken: string = await this.cacheService.get(id.toString());
 
     if (!redisRefreshToken) {
-      const refreshToken: string = await this.authService.setRefreshToken({ userId, authCode });
-      await this.cacheService.set(userId.toString(), refreshToken, 604800);
+      const refreshToken: string = await this.authService.setRefreshToken({ id, authCode });
+      await this.cacheService.set(id.toString(), refreshToken, 604800);
 
       madeNewTokens.refreshToken = refreshToken;
     }
