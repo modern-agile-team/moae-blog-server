@@ -10,7 +10,7 @@ import {
   PostSignInSwagger,
   RefreshTokenSwagger,
 } from '../common/decorators/compose-swagger.decorator';
-import { TokenDto } from './dto/token.dto';
+import { TokenDto } from '../common/dtos/token.dto';
 import { User } from 'src/common/decorators';
 
 @ApiTags('auth API')
@@ -34,10 +34,11 @@ export class AuthController {
   @Post('sign-in')
   async signIn(@Body() user: CurrentUserDto) {
     const { id, authCode } = await this.authService.signInUser(user);
-    const { accessToken, refreshToken }: TokenDto = await this.authService.setToken({
-      id,
-      authCode,
-    });
+    const { accessToken, refreshToken }: Pick<TokenDto, 'accessToken' | 'refreshToken'> =
+      await this.authService.setToken({
+        sub: id,
+        authCode,
+      });
 
     await this.cacheService.set(id.toString(), refreshToken, 604800);
 
@@ -54,15 +55,18 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
   async refreshToken(
-    @User() { id, authCode, refreshToken }: JwtPayload & { refreshToken: string },
-  ): Promise<TokenDto> {
-    const accessToken: string = await this.authService.setAccessToken({ id, authCode });
-    const madeNewTokens: TokenDto = { accessToken, refreshToken };
-    const redisRefreshToken: string = await this.cacheService.get(id.toString());
+    @User() { sub, authCode, refreshToken }: TokenDto,
+  ): Promise<Pick<TokenDto, 'accessToken' | 'refreshToken'>> {
+    const accessToken: string = await this.authService.setAccessToken({ sub, authCode });
+    const madeNewTokens: Pick<TokenDto, 'accessToken' | 'refreshToken'> = {
+      accessToken,
+      refreshToken,
+    };
+    const redisRefreshToken: string = await this.cacheService.get(sub.toString());
 
     if (!redisRefreshToken) {
-      const refreshToken: string = await this.authService.setRefreshToken({ id, authCode });
-      await this.cacheService.set(id.toString(), refreshToken, 604800);
+      const refreshToken: string = await this.authService.setRefreshToken({ sub, authCode });
+      await this.cacheService.set(sub.toString(), refreshToken, 604800);
 
       madeNewTokens.refreshToken = refreshToken;
     }

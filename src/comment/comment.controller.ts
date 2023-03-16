@@ -14,7 +14,6 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { comment, Prisma } from '@prisma/client';
-import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 import {
   DeleteCommentSwagger,
   GetAllCommentsOnBoardSwagger,
@@ -22,6 +21,7 @@ import {
   PutCommentSwagger,
 } from 'src/common/decorators/compose-swagger.decorator';
 import { User } from 'src/common/decorators/user.decorator';
+import { TokenDto } from 'src/common/dtos/token.dto';
 import { CommentService } from './comment.service';
 import { CreateOrUpdateCommentDto } from './dto/create-or-update-comment.dto';
 
@@ -42,11 +42,11 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
-    @User() { id }: CurrentUserDto,
+    @User() { sub }: TokenDto,
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<comment> {
-    return await this.commentService.create(id, boardId, context);
+    return await this.commentService.create(sub, boardId, context);
   }
 
   @PutCommentSwagger()
@@ -54,11 +54,11 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Put(':commentId')
   async update(
-    @User() { id }: CurrentUserDto,
+    @User() { sub }: TokenDto,
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentService.update(id, commentId, context);
+    return await this.commentService.update(sub, commentId, context);
   }
 
   @DeleteCommentSwagger()
@@ -66,10 +66,10 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Delete(':commentId')
   async delete(
-    @User() { id }: CurrentUserDto,
+    @User() { sub }: TokenDto,
     @Param('commentId', ParseIntPipe)
     commentId: number,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentService.delete(id, commentId);
+    return await this.commentService.delete(sub, commentId);
   }
 }

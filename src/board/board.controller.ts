@@ -32,7 +32,7 @@ import { SearchBoardDto } from './dto/search-board.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { ROLES_KEY } from 'src/common/constant';
-import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
+import { TokenDto } from 'src/common/dtos/token.dto';
 
 @ApiTags('board API')
 @Controller('boards')
@@ -65,11 +65,8 @@ export class BoardController {
   @Roles(ROLES_KEY.MEMBER)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
-  async create(
-    @Body() createBoardDto: CreateBoardDto,
-    @User() { id }: CurrentUserDto,
-  ): Promise<board> {
-    return await this.boardsService.create(id, createBoardDto);
+  async create(@Body() createBoardDto: CreateBoardDto, @User() { sub }: TokenDto): Promise<board> {
+    return await this.boardsService.create(sub, createBoardDto);
   }
 
   @PatchBoardSwagger()
@@ -80,9 +77,9 @@ export class BoardController {
   async update(
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() updateBoardDto: UpdateBoardDto,
-    @User() { id }: CurrentUserDto,
+    @User() { sub }: TokenDto,
   ): Promise<number> {
-    return await this.boardsService.update({ boardId, userId: id }, updateBoardDto);
+    return await this.boardsService.update({ boardId, userId: sub }, updateBoardDto);
   }
 
   @DeleteBoardSwagger()
@@ -92,8 +89,8 @@ export class BoardController {
   @Delete(':boardId')
   async delete(
     @Param('boardId', ParseIntPipe) boardId: number,
-    @User() { id }: CurrentUserDto,
+    @User() { sub }: TokenDto,
   ): Promise<number> {
-    return await this.boardsService.delete({ boardId, userId: id });
+    return await this.boardsService.delete({ boardId, userId: sub });
   }
 }

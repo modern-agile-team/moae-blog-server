@@ -1,8 +1,8 @@
 import { Controller, Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 import { GetUserSwagger, User } from 'src/common/decorators';
+import { TokenDto } from 'src/common/dtos/token.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('User API')
@@ -14,7 +14,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   @Get(':userId')
-  async getUser(@User() { id }: CurrentUserDto) {
-    return await this.usersService.getUser(id);
+  async getUser(@User() { sub }: TokenDto) {
+    return await this.usersService.getUser(sub);
   }
 }

@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { PostFileUploadSwagger, PostThumbnailUploadSwagger, User } from '../common/decorators';
 import { ImagesService } from './images.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
+import { TokenDto } from 'src/common/dtos/token.dto';
 
 @ApiTags('image API')
 @Controller('uploads')
@@ -24,9 +24,9 @@ export class ImagesController {
   uploadThumbnail(
     @UploadedFile() thumbnail: Express.MulterS3.File,
     @Param('boardId', ParseIntPipe) boardId: number,
-    @User() { id }: CurrentUserDto,
+    @User() { sub }: TokenDto,
   ) {
-    return this.imagesService.uploadThumbnail({ thumbnail, userId: id, boardId });
+    return this.imagesService.uploadThumbnail({ thumbnail, userId: sub, boardId });
   }
 
   @PostFileUploadSwagger()
