@@ -27,7 +27,7 @@ import {
   PostBoardSwagger,
   SearchBoardSwagger,
 } from '../common/decorators';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { SearchBoardDto } from './dto/search-board.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -60,7 +60,6 @@ export class BoardController {
     return await this.boardsService.getOneById(boardId);
   }
 
-  @ApiBearerAuth('accessToken')
   @PostBoardSwagger()
   @HttpCode(HttpStatus.CREATED)
   @Roles(ROLES_KEY.MEMBER)
@@ -73,7 +72,6 @@ export class BoardController {
     return await this.boardsService.create(id, createBoardDto);
   }
 
-  @ApiBearerAuth('accessToken')
   @PatchBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Roles(ROLES_KEY.MEMBER)
@@ -87,7 +85,6 @@ export class BoardController {
     return await this.boardsService.update({ boardId, userId: id }, updateBoardDto);
   }
 
-  @ApiBearerAuth('accessToken')
   @DeleteBoardSwagger()
   @HttpCode(HttpStatus.OK)
   @Roles(ROLES_KEY.MEMBER)

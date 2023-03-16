@@ -4,7 +4,7 @@ import { CurrentUserDto } from './dto/current-user.dto';
 import { AuthService } from './auth.service';
 import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
 import { CacheService } from '../cache/cache.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import {
   GetUserExistenceSwagger,
   PostSignInSwagger,
@@ -21,7 +21,6 @@ export class AuthController {
     private readonly cacheService: CacheService,
   ) {}
 
-  @ApiBearerAuth('accessToken')
   @GetUserExistenceSwagger()
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
@@ -51,7 +50,6 @@ export class AuthController {
    * @returns body (accessToken, refreshToken)
    *
    */
-  @ApiBearerAuth('accessToken')
   @RefreshTokenSwagger()
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')

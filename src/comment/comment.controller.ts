@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { comment, Prisma } from '@prisma/client';
 import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 import {
@@ -26,7 +26,6 @@ import { CommentService } from './comment.service';
 import { CreateOrUpdateCommentDto } from './dto/create-or-update-comment.dto';
 
 @ApiTags('Comment API')
-@ApiBearerAuth('accessToken')
 @Controller('board/:boardId/comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
