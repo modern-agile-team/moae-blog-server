@@ -2,18 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class CurrentUserDto {
+  @ApiProperty({ description: '이메일' })
   @IsNotEmpty()
   @IsEmail()
-  @ApiProperty({ description: '이메일' })
   email: string;
 
+  @ApiProperty({ description: '이름' })
   @IsNotEmpty()
   @IsString()
-  @ApiProperty({ description: '이름' })
   name: string;
 
+  @ApiProperty({ description: '유저 사진 경로' })
   @IsNotEmpty()
   @IsString()
-  @ApiProperty({ description: '유저 사진 경로' })
   baseUrl: string;
 }

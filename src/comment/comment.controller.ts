@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { comment, Prisma } from '@prisma/client';
 import {
   DeleteCommentSwagger,
@@ -21,11 +21,11 @@ import {
   PutCommentSwagger,
 } from 'src/common/decorators/compose-swagger.decorator';
 import { User } from 'src/common/decorators/user.decorator';
+import { TokenDto } from 'src/common/dtos/token.dto';
 import { CommentService } from './comment.service';
 import { CreateOrUpdateCommentDto } from './dto/create-or-update-comment.dto';
 
 @ApiTags('Comment API')
-@ApiBearerAuth('accessToken')
 @Controller('board/:boardId/comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
@@ -42,11 +42,11 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
-    @User() userId: number,
+    @User() { sub }: TokenDto,
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<comment> {
-    return await this.commentService.create(userId, boardId, context);
+    return await this.commentService.create(sub, boardId, context);
   }
 
   @PutCommentSwagger()
@@ -54,11 +54,11 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Put(':commentId')
   async update(
-    @User() userId: number,
+    @User() { sub }: TokenDto,
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentService.update(userId, commentId, context);
+    return await this.commentService.update(sub, commentId, context);
   }
 
   @DeleteCommentSwagger()
@@ -66,10 +66,10 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Delete(':commentId')
   async delete(
-    @User() userId: number,
+    @User() { sub }: TokenDto,
     @Param('commentId', ParseIntPipe)
     commentId: number,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentService.delete(userId, commentId);
+    return await this.commentService.delete(sub, commentId);
   }
 }

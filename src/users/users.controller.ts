@@ -1,8 +1,8 @@
 import { Controller, Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { GetUserSwagger } from 'src/common/decorators';
-import { CurrentUser } from '../auth/decorator/current-user.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import { GetUserSwagger, User } from 'src/common/decorators';
+import { TokenDto } from 'src/common/dtos/token.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('User API')
@@ -11,11 +11,10 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @GetUserSwagger()
-  @ApiBearerAuth('accessToken')
-  @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard('jwt'))
   @Get(':userId')
-  async getUser(@CurrentUser() userId: number) {
-    return await this.usersService.getUser(userId);
+  async getUser(@User() { sub }: TokenDto) {
+    return await this.usersService.getUser(sub);
   }
 }
