@@ -1,5 +1,6 @@
 import { applyDecorators, UseInterceptors } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
@@ -43,6 +44,7 @@ export function GetOneBoardSwagger() {
 
 export function PostBoardSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: '게시글 생성(token 필요)' }),
     ApiBody({ type: CreateBoardDto }),
     ApiCreatedResponse({ description: 'success', type: BoardEntity, isArray: true }),
@@ -51,6 +53,7 @@ export function PostBoardSwagger() {
 
 export function PatchBoardSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: '게시글 수정(token 필요)' }),
     ApiBody({ type: UpdateBoardDto }),
     ApiResponse({ status: 200, description: 'success', type: () => Number }),
@@ -59,6 +62,7 @@ export function PatchBoardSwagger() {
 
 export function DeleteBoardSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: '게시글 삭제(token 필요)' }),
     ApiResponse({ status: 200, description: 'success', type: () => Number }),
   );
@@ -66,6 +70,7 @@ export function DeleteBoardSwagger() {
 
 export function GetAllCommentsOnBoardSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({
       summary: '한개 게시글의 모든 댓글 조회',
       description: '게시글 고유 번호에 해당하는 모든 댓글을 조회합니다.',
@@ -75,6 +80,7 @@ export function GetAllCommentsOnBoardSwagger() {
 
 export function PostCommentSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: '한개 게시글에 댓글 생성', description: '댓글을 생성하는 API' }),
     ApiBody({
       type: CreateOrUpdateCommentDto,
@@ -86,6 +92,7 @@ export function PostCommentSwagger() {
 
 export function PutCommentSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: '댓글 수정', description: '댓글을 수정하는 API 입니다.' }),
     ApiBody({
       type: CreateOrUpdateCommentDto,
@@ -106,6 +113,7 @@ export function DeleteCommentSwagger() {
  */
 export function GetUserExistenceSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({
       summary: '유저 존재 여부 확인',
       description: '토큰 담아서 요청하면 존재 여부에 따라 true/false 반환',
@@ -135,6 +143,7 @@ export function PostSignInSwagger() {
 
 export function RefreshTokenSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: 'refresh token 를 이용해 access token 재발급 (refresh token 필요)' }),
     ApiBody({ type: String, description: 'RefreshToken', required: true }),
     ApiResponse({
@@ -174,6 +183,7 @@ export function GetBoardsInCategorySwagger() {
 /** User API */
 export function GetUserSwagger() {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: '유저 정보 조회', description: '토큰으로 유저 정보 확인 +게시글' }),
   );
 }
@@ -181,6 +191,7 @@ export function GetUserSwagger() {
 /**image API */
 export function PostFileUploadSwagger(fieldName = 'files') {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: '이미지 파일 저장 api', description: '최대 10개까지 가능하다.' }),
     UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 10 }])),
     ApiConsumes('multipart/form-data'),
@@ -201,6 +212,7 @@ export function PostFileUploadSwagger(fieldName = 'files') {
 
 export function PostThumbnailUploadSwagger(fieldName = 'thumbnail') {
   return applyDecorators(
+    ApiBearerAuth('accessToken'),
     ApiOperation({ summary: '썸네일 저장 api', description: '1개만 저장 가능' }),
     UseInterceptors(FileInterceptor(fieldName)),
     ApiConsumes('multipart/form-data'),

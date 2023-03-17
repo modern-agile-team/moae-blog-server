@@ -1,17 +1,17 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from './decorator/current-user.decorator';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { AuthService } from './auth.service';
 import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
 import { CacheService } from '../cache/cache.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import {
   GetUserExistenceSwagger,
   PostSignInSwagger,
   RefreshTokenSwagger,
 } from '../common/decorators/compose-swagger.decorator';
-import { TokenDto } from './dto/token.dto';
+import { TokenDto } from '../common/dtos/token.dto';
+import { User } from 'src/common/decorators';
 
 @ApiTags('auth API')
 @Controller('auth')
@@ -21,28 +21,28 @@ export class AuthController {
     private readonly cacheService: CacheService,
   ) {}
 
-  /**
-   * New Login Flow
-   */
   @GetUserExistenceSwagger()
-  @ApiBearerAuth('accessToken')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   @Get('existence')
-  async checkUserExistence(@CurrentUser() user: CurrentUserDto): Promise<boolean> {
+  async checkUserExistence(@User() user: CurrentUserDto): Promise<boolean> {
     return await this.authService.checkUserExistence(user);
   }
 
   @PostSignInSwagger()
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-in')
-  async signIn(@Body() user: CurrentUserDto): Promise<TokenDto> {
-    const userInfo = await this.authService.signInUser(user);
-    const payload: JwtPayload = { sub: userInfo.id.toString(), authCode: userInfo.authCode };
-    const { accessToken, refreshToken } = await this.authService.setToken(payload);
+  async signIn(@Body() user: CurrentUserDto) {
+    const { id, authCode } = await this.authService.signInUser(user);
+    const { accessToken, refreshToken }: Pick<TokenDto, 'accessToken' | 'refreshToken'> =
+      await this.authService.setToken({
+        sub: id,
+        authCode,
+      });
 
-    await this.cacheService.set(userInfo.id.toString(), refreshToken, 604800);
+    await this.cacheService.set(id.toString(), refreshToken, 604800);
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, userId: id, authCode };
   }
 
   /**
@@ -52,19 +52,21 @@ export class AuthController {
    *
    */
   @RefreshTokenSwagger()
-  @ApiBearerAuth('accessToken')
-  @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
-  async refreshToken(@CurrentUser() user: CurrentUserDto): Promise<TokenDto> {
-    const { refreshToken, sub, authCode } = user as JwtPayload &
-      CurrentUserDto & { refreshToken: string };
+  @Post('refresh')
+  async refreshToken(
+    @User() { sub, authCode, refreshToken }: TokenDto,
+  ): Promise<Pick<TokenDto, 'accessToken' | 'refreshToken'>> {
     const accessToken: string = await this.authService.setAccessToken({ sub, authCode });
-    const madeNewTokens: TokenDto = { accessToken, refreshToken };
-    const redisRefreshToken: string = await this.cacheService.get(sub);
+    const madeNewTokens: Pick<TokenDto, 'accessToken' | 'refreshToken'> = {
+      accessToken,
+      refreshToken,
+    };
+    const redisRefreshToken: string = await this.cacheService.get(sub.toString());
 
     if (!redisRefreshToken) {
       const refreshToken: string = await this.authService.setRefreshToken({ sub, authCode });
-      await this.cacheService.set(sub, refreshToken, 604800);
+      await this.cacheService.set(sub.toString(), refreshToken, 604800);
 
       madeNewTokens.refreshToken = refreshToken;
     }

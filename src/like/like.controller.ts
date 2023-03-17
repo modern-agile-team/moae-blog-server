@@ -1,10 +1,21 @@
-import { Body, Controller, Delete, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { LikeService } from './like.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetCountDto } from './dto/get-count.dto';
 import { RequestLikeDto } from './dto/request-like.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../common/decorators/user.decorator';
+import { TokenDto } from 'src/common/dtos/token.dto';
 
 @ApiBearerAuth('accessToken')
 @ApiTags('like API')
@@ -12,29 +23,33 @@ import { User } from '../common/decorators/user.decorator';
 export class LikeController {
   constructor(private readonly likesService: LikeService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Get('count')
   async getCount(@Query() data: GetCountDto): Promise<number> {
     return await this.likesService.getCount(data);
   }
 
-  @Get()
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
-  async getOne(@Query() data: RequestLikeDto, @User() userId: number) {
-    data.userId = userId;
+  @Get()
+  async getOne(@Query() data: RequestLikeDto, @User() { sub }: TokenDto) {
+    data.userId = sub;
     return await this.likesService.getOneLike(data);
   }
 
-  @Post()
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard('jwt'))
-  async createLike(@Body() data: RequestLikeDto, @User() userId: number) {
-    data.userId = userId;
+  @Post()
+  async createLike(@Body() data: RequestLikeDto, @User() { sub }: TokenDto) {
+    data.userId = sub;
     return await this.likesService.createLike(data);
   }
 
-  @Delete()
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
-  async deleteLike(@Body() data: RequestLikeDto, @User() userId: number) {
-    data.userId = userId;
+  @Delete()
+  async deleteLike(@Body() data: RequestLikeDto, @User() { sub }: TokenDto) {
+    data.userId = sub;
     return await this.likesService.deletedLike(data);
   }
 }

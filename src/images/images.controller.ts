@@ -10,28 +10,28 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { PostFileUploadSwagger, PostThumbnailUploadSwagger, User } from '../common/decorators';
 import { ImagesService } from './images.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
+import { TokenDto } from 'src/common/dtos/token.dto';
 
-@ApiBearerAuth('accessToken')
 @ApiTags('image API')
 @Controller('uploads')
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
   @PostThumbnailUploadSwagger()
-  @Post('/thumbnail/:boardId')
   @UseGuards(AuthGuard('jwt'))
+  @Post('/thumbnail/:boardId')
   uploadThumbnail(
     @UploadedFile() thumbnail: Express.MulterS3.File,
     @Param('boardId', ParseIntPipe) boardId: number,
-    @User() userId: number,
+    @User() { sub }: TokenDto,
   ) {
-    return this.imagesService.uploadThumbnail({ thumbnail, userId, boardId });
+    return this.imagesService.uploadThumbnail({ thumbnail, userId: sub, boardId });
   }
 
   @PostFileUploadSwagger()
-  @Post('/')
   @UseGuards(AuthGuard('jwt'))
+  @Post('/')
   uploadFile(@UploadedFiles() files: { files: Express.MulterS3.File[] }) {
     return this.imagesService.uploadFile(files);
   }

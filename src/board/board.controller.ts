@@ -27,13 +27,13 @@ import {
   PostBoardSwagger,
   SearchBoardSwagger,
 } from '../common/decorators';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { SearchBoardDto } from './dto/search-board.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { ROLES_KEY } from 'src/common/constant';
+import { TokenDto } from 'src/common/dtos/token.dto';
 
-@ApiBearerAuth('accessToken')
 @ApiTags('board API')
 @Controller('boards')
 export class BoardController {
@@ -65,8 +65,8 @@ export class BoardController {
   @Roles(ROLES_KEY.MEMBER)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
-  async create(@Body() createBoardDto: CreateBoardDto, @User() userId: number): Promise<board> {
-    return await this.boardsService.create(userId, createBoardDto);
+  async create(@Body() createBoardDto: CreateBoardDto, @User() { sub }: TokenDto): Promise<board> {
+    return await this.boardsService.create(sub, createBoardDto);
   }
 
   @PatchBoardSwagger()
@@ -77,9 +77,9 @@ export class BoardController {
   async update(
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() updateBoardDto: UpdateBoardDto,
-    @User() userId: number,
+    @User() { sub }: TokenDto,
   ): Promise<number> {
-    return await this.boardsService.update({ boardId, userId }, updateBoardDto);
+    return await this.boardsService.update({ boardId, userId: sub }, updateBoardDto);
   }
 
   @DeleteBoardSwagger()
@@ -89,8 +89,8 @@ export class BoardController {
   @Delete(':boardId')
   async delete(
     @Param('boardId', ParseIntPipe) boardId: number,
-    @User() userId: number,
+    @User() { sub }: TokenDto,
   ): Promise<number> {
-    return await this.boardsService.delete({ boardId, userId });
+    return await this.boardsService.delete({ boardId, userId: sub });
   }
 }

@@ -5,6 +5,7 @@ import { SelectBoardDto } from './dto/select-board.dto';
 import { BoardRepository } from './board.repository';
 import { UpdateBoardDto } from './dto/update-board.dto';
 import { BoardUserType } from '../common/interfaces/index.interface';
+
 import { SearchBoardDto } from './dto/search-board.dto';
 import { SearchWhere } from './board.type';
 
