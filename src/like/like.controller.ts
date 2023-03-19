@@ -14,7 +14,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetCountDto } from './dto/get-count.dto';
 import { RequestLikeDto } from './dto/request-like.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../common/decorators/user.decorator';
+import { User } from '../common/decorators';
 import { TokenDto } from 'src/common/dtos/token.dto';
 
 @ApiBearerAuth('accessToken')
@@ -32,24 +32,24 @@ export class LikeController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async getOne(@Query() data: RequestLikeDto, @User() { sub }: TokenDto) {
-    data.userId = sub;
+  async getOne(@Query() data: RequestLikeDto, @User() { userId }: TokenDto) {
+    data.userId = userId;
     return await this.likesService.getOneLike(data);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async createLike(@Body() data: RequestLikeDto, @User() { sub }: TokenDto) {
-    data.userId = sub;
+  async createLike(@Body() data: RequestLikeDto, @User() { userId }: TokenDto) {
+    data.userId = userId;
     return await this.likesService.createLike(data);
   }
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   @Delete()
-  async deleteLike(@Body() data: RequestLikeDto, @User() { sub }: TokenDto) {
-    data.userId = sub;
+  async deleteLike(@Body() data: RequestLikeDto, @User() { userId }: TokenDto) {
+    data.userId = userId;
     return await this.likesService.deletedLike(data);
   }
 }

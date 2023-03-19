@@ -1,5 +1,6 @@
 export type TokenDto = {
-  sub: number;
+  userId: number;
+  sub: string;
   authCode: number;
   accessToken: string;
   refreshToken: string;
