@@ -35,15 +35,10 @@ export class ImagesService {
   }
 
   async deleteFiles(dto: DeleteFilesDto) {
-    const Objects = dto.files.reduce((result, value) => {
-      result.push({ Key: value });
-      return result;
-    }, []);
-
     const command = new DeleteObjectsCommand({
       Bucket: this.configService.get('AWS_BUCKET_NAME'),
       Delete: {
-        Objects,
+        Objects: dto.files.map((value) => ({ Key: value })),
       },
     });
     await this.s3.send(command);
