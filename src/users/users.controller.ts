@@ -14,7 +14,7 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   @Get(':userId')
-  async getUser(@User() { userId }: TokenDto) {
-    return await this.usersService.getUser(userId);
+  async getUser(@User() { sub }: TokenDto) {
+    return await this.usersService.getUser(sub);
   }
 }
