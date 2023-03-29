@@ -32,9 +32,9 @@ export class ImagesController {
   async uploadThumbnail(
     @UploadedFile() thumbnail: Express.MulterS3.File,
     @Param('boardId', ParseIntPipe) boardId: number,
-    @User() { userId }: TokenDto,
+    @User() { sub }: TokenDto,
   ) {
-    return await this.imagesService.uploadThumbnail({ thumbnail, userId, boardId });
+    return await this.imagesService.uploadThumbnail({ thumbnail, userId: sub, boardId });
   }
 
   @PostFileUploadSwagger()

@@ -32,24 +32,24 @@ export class LikeController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async getOne(@Query() data: RequestLikeDto, @User() { userId }: TokenDto) {
-    data.userId = userId;
+  async getOne(@Query() data: RequestLikeDto, @User() { sub }: TokenDto) {
+    data.userId = sub;
     return await this.likesService.getOneLike(data);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async createLike(@Body() data: RequestLikeDto, @User() { userId }: TokenDto) {
-    data.userId = userId;
+  async createLike(@Body() data: RequestLikeDto, @User() { sub }: TokenDto) {
+    data.userId = sub;
     return await this.likesService.createLike(data);
   }
 
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard('jwt'))
   @Delete()
-  async deleteLike(@Body() data: RequestLikeDto, @User() { userId }: TokenDto) {
-    data.userId = userId;
+  async deleteLike(@Body() data: RequestLikeDto, @User() { sub }: TokenDto) {
+    data.userId = sub;
     return await this.likesService.deletedLike(data);
   }
 }

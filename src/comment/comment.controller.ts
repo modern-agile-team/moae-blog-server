@@ -42,11 +42,11 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(
-    @User() { userId }: TokenDto,
+    @User() { sub }: TokenDto,
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<comment> {
-    return await this.commentService.create(userId, boardId, context);
+    return await this.commentService.create(sub, boardId, context);
   }
 
   @PutCommentSwagger()
@@ -54,11 +54,11 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Put(':commentId')
   async update(
-    @User() { userId }: TokenDto,
+    @User() { sub }: TokenDto,
     @Param('commentId', ParseIntPipe) commentId: number,
     @Body() { context }: CreateOrUpdateCommentDto,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentService.update(userId, commentId, context);
+    return await this.commentService.update(sub, commentId, context);
   }
 
   @DeleteCommentSwagger()
@@ -66,10 +66,10 @@ export class CommentController {
   @UseGuards(AuthGuard('jwt'))
   @Delete(':commentId')
   async delete(
-    @User() { userId }: TokenDto,
+    @User() { sub }: TokenDto,
     @Param('commentId', ParseIntPipe)
     commentId: number,
   ): Promise<Prisma.BatchPayload> {
-    return await this.commentService.delete(userId, commentId);
+    return await this.commentService.delete(sub, commentId);
   }
 }

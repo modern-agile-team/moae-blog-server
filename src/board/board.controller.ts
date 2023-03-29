@@ -65,11 +65,8 @@ export class BoardController {
   @Roles(ROLES_KEY.MEMBER)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
-  async create(
-    @Body() createBoardDto: CreateBoardDto,
-    @User() { userId }: TokenDto,
-  ): Promise<board> {
-    return await this.boardsService.create(userId, createBoardDto);
+  async create(@Body() createBoardDto: CreateBoardDto, @User() { sub }: TokenDto): Promise<board> {
+    return await this.boardsService.create(sub, createBoardDto);
   }
 
   @PatchBoardSwagger()
@@ -80,9 +77,9 @@ export class BoardController {
   async update(
     @Param('boardId', ParseIntPipe) boardId: number,
     @Body() updateBoardDto: UpdateBoardDto,
-    @User() { userId }: TokenDto,
+    @User() { sub }: TokenDto,
   ): Promise<number> {
-    return await this.boardsService.update({ boardId, userId }, updateBoardDto);
+    return await this.boardsService.update({ boardId, userId: sub }, updateBoardDto);
   }
 
   @DeleteBoardSwagger()
@@ -92,8 +89,8 @@ export class BoardController {
   @Delete(':boardId')
   async delete(
     @Param('boardId', ParseIntPipe) boardId: number,
-    @User() { userId }: TokenDto,
+    @User() { sub }: TokenDto,
   ): Promise<number> {
-    return await this.boardsService.delete({ boardId, userId });
+    return await this.boardsService.delete({ boardId, userId: sub });
   }
 }
