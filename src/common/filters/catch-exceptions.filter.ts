@@ -16,13 +16,13 @@ export class CatchExceptionFilter implements ExceptionFilter {
       stack: exception.stack,
     });
 
-    const httpStatus =
-      exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+    const checkHttpException = exception => exception instanceof HttpException;
 
-    return exception instanceof HttpException
-      ? response.status(httpStatus).json(exception.getResponse())
-      : response.status(httpStatus).json({
-          description: '서버 에러입니다.',
-        });
+    if (checkHttpException(exception)) {
+      return response.status(exception.getStatus()).json(exception.getResponse());
+    }
+    return response
+      .status(HttpStatus.INTERNAL_SERVER_ERROR)
+      .json({ description: '서버 에러입니다.' });
   }
 }
