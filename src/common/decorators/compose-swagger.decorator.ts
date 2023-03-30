@@ -16,6 +16,7 @@ import { CreateOrUpdateCommentDto } from 'src/comment/dto/create-or-update-comme
 import { CurrentUserDto } from 'src/auth/dto/current-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileFieldsInterceptor } from '@nestjs/platform-express/multer/interceptors/file-fields.interceptor';
+import { DeleteFilesDto } from '../../images/dto/delete-files.dto';
 
 export function SearchBoardSwagger() {
   return applyDecorators(
@@ -228,5 +229,14 @@ export function PostThumbnailUploadSwagger(fieldName = 'thumbnail') {
       },
     }),
     ApiResponse({ status: 201, description: 'success' }),
+  );
+}
+
+export function DeleteFileUploadSwagger() {
+  return applyDecorators(
+    ApiBearerAuth('accessToken'),
+    ApiOperation({ summary: '이미지 삭제 api', description: '토큰으로 유저 정보 확인' }),
+    ApiBody({ type: DeleteFilesDto, description: 'files', required: true }),
+    ApiResponse({ status: 200, type: DeleteFilesDto, description: 'success' }),
   );
 }

@@ -1,14 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './config/swagger/swagger';
 import { VALIDATION_OPTIONS } from './config/validation/validation-pipe';
-import { moaeBlogErrorFilters } from './common/filters/export-filters';
+import { CatchExceptionFilter } from './common/filters/catch-exceptions.filter';
+import { logger } from './utils/logger.util';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
-  const logger: Logger = new Logger();
+  const app = await NestFactory.create(AppModule, { cors: true, logger });
   const configService = app.get(ConfigService);
   const PORT: number = configService.get<number>('PORT');
 
@@ -18,12 +18,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe(VALIDATION_OPTIONS));
 
   /* Error Filter */
-  app.useGlobalFilters(...moaeBlogErrorFilters(logger));
+  app.useGlobalFilters(new CatchExceptionFilter());
 
   /* Swagger API Docs */
   setupSwagger(app);
 
   await app.listen(PORT);
-  logger.log(`Start Run: ${PORT}`);
 }
 bootstrap();

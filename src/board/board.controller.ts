@@ -26,11 +26,11 @@ import {
   PatchBoardSwagger,
   PostBoardSwagger,
   SearchBoardSwagger,
+  Roles,
 } from '../common/decorators';
 import { ApiTags } from '@nestjs/swagger';
 import { SearchBoardDto } from './dto/search-board.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
-import { Roles } from 'src/common/decorators/roles.decorator';
 import { ROLES_KEY } from 'src/common/constant';
 import { TokenDto } from 'src/common/dtos/token.dto';
 

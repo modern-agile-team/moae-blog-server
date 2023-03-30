@@ -1,11 +1,12 @@
 import { Prisma } from '@prisma/client';
 import { Expose, Type } from 'class-transformer';
-import { IsOptional } from 'class-validator';
+import { IsOptional, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SelectBoardDto {
   @IsOptional()
   @Type(() => Number)
+  @Min(0)
   @ApiProperty({ default: 0, description: 'n번째부터 조회' })
   skip = 0;
 

@@ -14,7 +14,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetCountDto } from './dto/get-count.dto';
 import { RequestLikeDto } from './dto/request-like.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from '../common/decorators/user.decorator';
+import { User } from '../common/decorators';
 import { TokenDto } from 'src/common/dtos/token.dto';
 
 @ApiBearerAuth('accessToken')

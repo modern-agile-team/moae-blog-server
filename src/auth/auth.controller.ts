@@ -2,16 +2,15 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from '@n
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { AuthService } from './auth.service';
-import { JwtPayload } from '../common/interfaces/jwt-payload.interface';
 import { CacheService } from '../cache/cache.service';
 import { ApiTags } from '@nestjs/swagger';
 import {
   GetUserExistenceSwagger,
   PostSignInSwagger,
   RefreshTokenSwagger,
-} from '../common/decorators/compose-swagger.decorator';
+} from '../common/decorators';
 import { TokenDto } from '../common/dtos/token.dto';
-import { User } from 'src/common/decorators';
+import { User } from '../common/decorators';
 
 @ApiTags('auth API')
 @Controller('auth')
@@ -42,7 +41,7 @@ export class AuthController {
 
     await this.cacheService.set(id.toString(), refreshToken, 604800);
 
-    return { accessToken, refreshToken, userId: id, authCode };
+    return { accessToken, refreshToken, sub: id, authCode };
   }
 
   /**
@@ -65,7 +64,10 @@ export class AuthController {
     const redisRefreshToken: string = await this.cacheService.get(sub.toString());
 
     if (!redisRefreshToken) {
-      const refreshToken: string = await this.authService.setRefreshToken({ sub, authCode });
+      const refreshToken: string = await this.authService.setRefreshToken({
+        sub,
+        authCode,
+      });
       await this.cacheService.set(sub.toString(), refreshToken, 604800);
 
       madeNewTokens.refreshToken = refreshToken;
